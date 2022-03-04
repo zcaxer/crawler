@@ -1,0 +1,882 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=GBK'>
+<meta name='apple-itunes-app' content='app-id=836485862'/>
+<meta name='renderer' content='webkit|ie-stand|ie-comp'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge; IE=11; IE=10; IE=9; IE=8'>
+<meta http-equiv='Cache-Control' content='no-transform'>
+<meta name='format-detection' content='telephone=no'/>
+<meta name='description' content=''>
+<meta name='keywords' content=''><title>走不出来…… NGA玩家社区</title>
+<script type='text/javascript'>
+//loadscriptstart
+var __CURRENT_UID = parseInt('61056884',10),
+__CURRENT_AVATAR = null,
+__NOW = 1646384522,
+__CURRENT_UNAME = 'zyphaxy',
+__CACHE_PATH = './data/bbscache',
+__MISC_COOKIE_NAME = 'bbsmisccookies',
+__CHARSET = 'GBK'
+
+var __GP = {
+_b:{//lib_core::_GB~
+admin : 1,
+'super' : 2,
+greater : 4,
+superlesser : 8,
+lesser : 16,
+normal : 32,
+topic : 64,
+reply : 128,
+vote : 256,
+comment : 512,
+search : 524288,
+voteBet : 1048576
+},
+_ub:{
+ubSecAct:1024,
+ubSecView:8,
+ubSecViewS:2048,
+ubStaff:16,
+ubMod:4,
+ubExA:128,
+ubExASucc:256
+},
+_n:null,
+init:function(gbit,adck,rvrc,act,ubit,llog){
+	this._n = {
+		_bit:gbit,
+		admincheck:adck,
+		rvrc:rvrc,
+		active:act,
+		userBit:ubit
+		}
+	this.loginlog = llog
+	for(var k in this._n){
+		this[k] = this._n[k]|0
+		if(!this[k])this[k]=0
+		}
+	for(var k in this._b)
+		this[k] = this._b[k]&this._bit ? 1 : 0
+	for(var k in this._ub)
+		this[k] = this._ub[k]&this.userBit ? 1 : 0
+	}
+}//ce
+
+__GP.init('622816','','10','4','1310720','')
+//loadscriptend
+var _NotLoad178NavAll=1,
+ngaAds=[]
+ngaAds.location = location
+
+var __IMG_BASE = 'http://img4.nga.178.com',
+__IMGPATH = 'http://img4.nga.178.com/ngabbs',
+__IMG_STYLE = 'http://img4.nga.178.com/ngabbs/nga_classic',
+__COMMONRES_PATH = 'http://img4.nga.178.com/common_res',
+__BBSURL = location.protocol+'//bbs.nga.cn',
+__CKDOMAIN = 'bbs.nga.cn',
+__LASTDOMAIN = '',
+__ATTACH_BASE = 'https://img8.nga.cn',
+__ATTACH_BASE_UPLOAD = 'img8.nga.cn',
+__ATTACH_BASE_UPLOAD_SEC = 'img8.nga.cn',
+__ATTACH_BASE_VIEW = 'img.nga.178.com',
+__ATTACH_BASE_VIEW_SEC = 'img.nga.178.com',
+__RES_BASE = 'img4.nga.178.com',
+__RES_BASE_SEC = 'img4.nga.178.com',
+__DSBASE = 'http://g1.tagtic.cn/v1/xingyou/c' 
+if(location.protocol=='https:'){
+	;(function(){var i=0,a=arguments
+		for(;i<a.length;i++)
+			this[a[i]]=this[a[i]].replace(/^https?:\/\/[^\/]+/,'https://img4.nga.178.com')
+		})('__IMG_BASE','__IMGPATH','__IMG_STYLE','__COMMONRES_PATH');
+	__DSBASE = __DSBASE.replace(/^http:/,'https:')
+	}
+var __STYLE = [
+['default', __IMG_STYLE+'/css_default.css?7836582', __IMG_STYLE+'/js_color.js?7836582'],
+['teal', __IMG_STYLE+'/css_default1.css?7836582', __IMG_STYLE+'/js_color1.js?7836582'],
+['purp', __IMG_STYLE+'/css_default2.css?7836582', __IMG_STYLE+'/js_color2.js?7836582'],
+['dark', __IMG_STYLE+'/css_default3.css?7836582', __IMG_STYLE+'/js_color3.js?7836582']
+],
+__SCRIPTS={
+lib:__COMMONRES_PATH+'/js_commonLib.js?120870',
+common:__COMMONRES_PATH+'/js_commonui.js?5804846',
+forum:__COMMONRES_PATH+'/js_forum.js?3035942',
+commonSpec:__IMG_STYLE+'/js_default.js?9958702',
+bbscode:__COMMONRES_PATH+'/js_bbscode_core.js?1308371',
+bbscodeSpec:__IMG_STYLE+'/js_bbscode_smiles.js?2920965',
+post:__COMMONRES_PATH+'/js_postfunc_v2.js?3035942',
+mainMenu:__COMMONRES_PATH+'/js_mainMenu.js?110864',
+customBg:__IMG_STYLE+'/js_customBg.js?111115',
+dsList:__IMG_STYLE+'/js_dslist_default.js?1204856',
+dsCommon:__COMMONRES_PATH+'/js_dscommon.js?1204489',
+dsid_bbs_ads24:__DSBASE+'/715.js',
+dsid_bbs_ads22:__DSBASE+'/718.js',
+dsid_bbs_ads12:__DSBASE+'/778.js',
+dsid_bbs_ads1:__DSBASE+'/714.js',
+combine:__IMG_BASE+'/proxy/cache_attach/js_combine_data.js?'+Math.floor(__NOW/300),
+//dsid_bbs_ads44:__DSBASE+'/6001.js',
+dsid_bbs_ads45:__DSBASE+'/6002.js',
+dsid_bbs_ads46:__DSBASE+'/200810.js',
+dsid_bbs_ads47:__DSBASE+'/200811.js',
+dsid_bbs_ads49:__DSBASE+'/200809.js',
+dsid_bbs_ads50:__DSBASE+'/200808.js',
+dsid_bbs_ads51:__DSBASE+'/200807.js',
+jsDebug:'http://127.0.0.1/jsDebug.js',
+notification:__COMMONRES_PATH+'/js_notification.js?8606922',
+md5:__COMMONRES_PATH+'/js_md5.js?140335',
+admin:__COMMONRES_PATH+'/js_admin.js?8606922',
+d3ItemSelect:__COMMONRES_PATH+'/js_d3_item_select.js?120649',
+iframeRead2:__COMMONRES_PATH+'/js_iframeRead.js?130144',
+loaderRead:__COMMONRES_PATH+'/js_box.js?8606922',
+userItem:__COMMONRES_PATH+'/js_userItem.js?131056',
+highlighter:__COMMONRES_PATH+'/js_highlighter.js?140332',
+armory:__IMG_STYLE+'/js_armory.js?120685',
+read:__COMMONRES_PATH+'/js_read.js?3502428',
+message:__COMMONRES_PATH+'/js_message.js?121095',
+userScript:__IMG_STYLE+'/js_userScript.js?131026',
+quoteTo:__COMMONRES_PATH+'/js_quote_to.js?432463',
+ucp:__COMMONRES_PATH+'/js_ucp.js?121161',
+imgEdit:__COMMONRES_PATH+'/js_imageEdit.js?121020',
+bbscodeMd:__COMMONRES_PATH+'/js_bbscode_md.js?120439',
+stat:'https://bdtj.tagtic.cn/bi-sdk.1.2.1.js?635574',
+ubbeditor:__COMMONRES_PATH+'/ubbeditor/index.html?v=1.05',
+dsCommonG:'https://g1.tagtic.cn/g.js',
+service:'/js_service.js?778546',
+rand:637858
+}
+;(function(){
+var T=__SCRIPTS,ev,h,tor=function(f){setTimeout(f)}
+T.lg={}
+T.loading=0
+T.lo={}
+T.cl=[]
+T.load = function(s,f,c,y){
+var x = (!(y&1)||!h)?document.createElement('script'):''
+if(!h){ev=('readyState' in x)?'onreadystatechange':'onload'
+	h=document.getElementsByTagName('head')[0]}
+if(s.charAt(0)=='/'||s.substr(0,4)=='http'){
+	var k='s_'+Math.random()
+	this[k] = s
+	s=k}
+else if(!this[s]||this.src(s))
+	return
+if(f)this.cl[s]=f
+if((y&2)==0){
+	this.loading++
+	this.lg[this[s]]=(this.lg[this[s]]|0)+1
+	}
+if(y&1)
+	document.write('<script src="'+this[s]+'" type="text/javascr'+'ipt" '+ev+'="__SCRIPTS.ol(this,\''+s+'\')" onerror="__SCRIPTS.oe(this,event)" '+(c?'charset="'+c+'"':'')+'></scr'+'ipt>')
+else{x.src=this[s]
+	x.type='text/javascript'
+	if(c)x.charset=c
+	x[ev]=function(){__SCRIPTS.ol(this,s)}
+	x.onerror=function(e){__SCRIPTS.oe(this,e)}
+	h.insertBefore(x,h.firstChild)}
+}//
+T.src = function(s){}//
+T.asyncLoad = function(){var a=arguments, x=a.length,y
+if(typeof a[x-1]=='number')y=a[--x]
+for(var i=0;i<x;i++){if(a[i]){this.load(a[i],typeof a[i+1]=='function'?a[++i]:0,0,y)}}
+}//
+T.el=function(e){console.log(e)}//
+T.syncLoad = function(){var a=arguments;a[a.length]=(a[a.length]|0)|1;a.length++;T.asyncLoad.apply(this,a)}//
+T.oe=function(o,e){this.el(o.src+' load error');if(this.loading>0){
+	this.loading--
+	//this.lg[o.src]--
+	}
+}//
+T.ol=function(o,n){
+if(ev!='onload'){var r=o.readyState
+	if (r && r!='loaded' && r!='complete')return}
+this.lo[n]=1
+if(this.loading>0){
+	this.loading--
+	this.lg[o.src]--
+	}
+if(this.cl[n])tor(this.cl[n])
+if(this.loading<1){while(this.cl.length)tor(this.cl.shift())}
+}//
+T.wload=function(f){if(this.loading<1)return f();this.cl.push(f)}//
+})();
+
+
+//loadscriptstart
+__CURRENT_FID='-7955747'|0
+__CURRENT_F_BIT='8384'|0
+__CURRENT_TID=29361289
+__CURRENT_STID=''|0
+//loadscriptend
+
+</script>
+<script type='text/javascript'>
+var tmp = 0
+tmp |= (__GP.lesser||__GP.ubMod)?1:0
+tmp |= 2//(window.__DEBUG || (window.__CURRENT_UID&3)==3)?2:0
+if(tmp && window.localStorage)
+	ngaAds.wait=[]
+__SCRIPTS.syncLoad('lib','dsList','combine','dsCommon','md5','common','forum', (tmp&1)?'admin':'' , (tmp&3)? 'loaderRead':'', (tmp&3)?function(){commonui.aE(window,'bodyInit',function(){_LOADERREAD.init()})}:'')
+</script>
+<script type='text/javascript'>
+__COOKIE.init(__CKDOMAIN,'/','bbsmisccookies')
+__SETTING.init(0)
+</script>
+<script type='text/javascript'>
+__SCRIPTS.syncLoad('commonSpec','bbscode','bbscodeSpec','mainMenu','customBg','post')
+</script>
+</head>
+<body>
+<div class='clear minWidthSpacer' id='minWidthSpacer'></div>
+<div id='mmc'>
+<script type='text/javascript'>
+commonui.ifuserscript()
+commonui.initAfterBody()
+</script>
+
+<div id='mc'>
+<div id='mainmenu'>
+<a href='/nuke.php?func=ucp&uid=61056884'>用户中心</a> <a href='/nuke.php?__lib=login&__act=logout' >登出</a>
+<a href='javascript:void(0)' class='end'></a></div>
+<script type='text/javascript'>commonui.mainMenu.init(__CURRENT_UNAME,'',__CURRENT_AVATAR,'',__CURRENT_UID);</script>
+
+<script type='text/javascript'>
+//loadscriptstart
+__SCRIPTS.syncLoad('read','armory','quoteTo')//loadscriptend
+__CURRENT_FID=parseInt('-7955747')
+__CURRENT_F_BIT=parseInt('8384')
+__CURRENT_F_ALLOWREPLY='+p1095,+u1,+w,+r-7955747_-500'
+__CURRENT_TID=29361289
+</script>
+<script type='text/javascript'>
+//userinfostart
+commonui.userInfo.setAll(   {"43107923":{"uid":43107923,"username":"鞭炮味的elsa","credit":34865152,"medal":null,"reputation":"61_3","groupid":-1,"memberid":39,"avatar":"http://img.nga.178.com/avatars/2002/653/91c/002/43107923_0.png?41","yz":4,"site":null,"honor":null,"regdate":1532877744,"mute_time":null,"postnum":2035,"rvrc":10,"money":748,"thisvisit":1646306028,"signature":"第一份工作<br/>毕业","nickname":null,"bit_data":34865152 },"1490433":{"uid":1490433,"username":"hhhh123","credit":1056768,"medal":"262,207","reputation":"8_-300,61_5","groupid":-1,"memberid":42,"avatar":null,"yz":4,"site":null,"honor":null,"regdate":1232207478,"mute_time":null,"postnum":723,"rvrc":-10,"money":22609,"thisvisit":1646306011,"signature":"我喜欢的人不喜欢我。。。。。。。。。。。","nickname":"hhhh123","bit_data":1056768 },"61529001":{"uid":61529001,"username":"白日安","credit":169091584,"medal":null,"reputation":"61_30,128_240,130_40,192_20,199_25,450003_20,450006_25,450008_10","groupid":-1,"memberid":39,"avatar":"https://img.nga.178.com/avatars/2002/ba9/aad/003/61529001_0.jpg?66","yz":4,"site":null,"honor":null,"regdate":1578231313,"mute_time":null,"postnum":1546,"rvrc":16,"money":24100,"thisvisit":1646297388,"signature":null,"nickname":null,"bit_data":169091584 },"62653695":{"uid":62653695,"username":"符可香","credit":1311232,"medal":null,"reputation":"92_15","groupid":-1,"memberid":39,"avatar":"http://img.nga.178.com/avatars/2002/4ff/bc0/003/62653695_0.jpg?86","yz":4,"site":null,"honor":null,"regdate":1604485689,"mute_time":null,"postnum":3918,"rvrc":10,"money":0,"thisvisit":1646355355,"signature":"自律才能自强","nickname":null,"bit_data":1311232 },"60409396":{"uid":60409396,"username":"tianhell18","credit":135528960,"medal":null,"reputation":"61_13,67_195","groupid":-1,"memberid":39,"avatar":null,"yz":4,"site":null,"honor":null,"regdate":1557116547,"mute_time":null,"postnum":1092,"rvrc":10,"money":1400,"thisvisit":1646383884,"signature":null,"nickname":null,"bit_data":135528960 },"63585328":{"uid":63585328,"username":"超弹奶冻","credit":135528960,"medal":null,"reputation":"205_60,209_80,22_10,199_100,450001_70,91_10,61_19,450010_60","groupid":-1,"memberid":39,"avatar":"https://img.nga.178.com/avatars/2002/c30/ca3/003/63585328_0.jpg?76","yz":4,"site":null,"honor":null,"regdate":1631672443,"mute_time":null,"postnum":108,"rvrc":10,"money":7400,"thisvisit":1646371095,"signature":"我只在乎每天能不能六点准时下班","nickname":null,"bit_data":135528960 },"60392889":{"uid":60392889,"username":"Nekoume","credit":135528448,"medal":null,"reputation":"61_20,53_30,208_30,58_30","groupid":-1,"memberid":39,"avatar":"https://img.nga.178.com/avatars/2002/5b9/998/003/60392889_0.png?70","yz":4,"site":null,"honor":null,"regdate":1556379118,"mute_time":null,"postnum":980,"rvrc":10,"money":11200,"thisvisit":1646365707,"signature":"SunoharaAyaka","nickname":null,"bit_data":135528448 },"135020":{"uid":135020,"username":"pryy","credit":1310722,"medal":"56","reputation":"13_-150,16_-299,28_20,61_2,139_30","groupid":-1,"memberid":42,"avatar":null,"yz":4,"site":null,"honor":null,"regdate":1119878005,"mute_time":null,"postnum":6174,"rvrc":-15,"money":11829,"thisvisit":1646379392,"signature":null,"nickname":null,"bit_data":1310722 },"156464":{"uid":156464,"username":"d_n","credit":135537152,"medal":null,"reputation":"92_15,61_5,22_30","groupid":-1,"memberid":39,"avatar":null,"yz":4,"site":null,"honor":null,"regdate":1124343372,"mute_time":null,"postnum":2988,"rvrc":10,"money":36434,"thisvisit":1646255138,"signature":"儿子是欧皇，五次十连，两孔三梅<br/>非酋老爸欲哭无泪","nickname":null,"bit_data":135537152 },"63526647":{"uid":63526647,"username":"Fr278y","credit":135528960,"medal":null,"reputation":"61_9,450001_20","groupid":-1,"memberid":39,"avatar":null,"yz":4,"site":null,"honor":null,"regdate":1629973896,"mute_time":null,"postnum":1295,"rvrc":10,"money":0,"thisvisit":1646299524,"signature":null,"nickname":null,"bit_data":135528960 },"13032547":{"uid":13032547,"username":"荷兰小小猪","credit":1835522,"medal":"336,335,262,261,207","reputation":"1_180,22_300,94_75,61_1,116_30","groupid":-1,"memberid":73,"avatar":null,"yz":4,"site":null,"honor":null,"regdate":1311843032,"mute_time":null,"postnum":2676,"rvrc":35,"money":31480,"thisvisit":1645883355,"signature":null,"nickname":null,"bit_data":1835522 },"38834120":{"uid":38834120,"username":"心远地自偏111","credit":135668224,"medal":null,"reputation":"5_30","groupid":-1,"memberid":39,"avatar":null,"yz":4,"site":null,"honor":null,"regdate":1471080000,"mute_time":null,"postnum":1190,"rvrc":10,"money":0,"thisvisit":1646345548,"signature":null,"nickname":null,"bit_data":135668224 },"60122426":{"uid":60122426,"username":"SinrinG","credit":169091072,"medal":null,"reputation":"61_239,67_45","groupid":-1,"memberid":39,"avatar":null,"yz":4,"site":null,"honor":" 1567530942 装备绑定的牛头人镰刀","regdate":1543829274,"mute_time":null,"postnum":392,"rvrc":10,"money":17900,"thisvisit":1646299731,"signature":null,"nickname":null,"bit_data":169091072 },"4673177":{"uid":4673177,"username":"纯爷们_","credit":169083459,"medal":"425,90,215,103,333,273,347,341,109,272","reputation":"11_165,7_75,13_180,28_180,37_60,22_420,16_195,40_15,41_15,39_255,47_600,65_150,73_15,77_15,71_180,19_25,74_30,84_15,81_15,42_15,91_270,50_75,83_105,1_15,75_615,53_60,94_210,80_90,101_30,97_45,57_30,68_15,78_30,12_90,43_60,9_15,10_120,114_15,96_45,15_45,72_30,134_75,30_15,3_15,93_15,45_15,2_45,87_45,147_60,90_30,149_30,137_20,128_15,158_15,163_15,61_33,44_30,169_15,58_60,184_15,209_20,450001_30,199_20,450004_20,450005_20,218_10,130_20,450008_20,450009_20,450012_10,450010_20,450013_20,139_30,450014_10,216_15","groupid":-1,"memberid":76,"avatar":"https://img.nga.178.com/avatars/2002/e99/474/000/4673177_0.jpg?72","yz":4,"site":null,"honor":" 1567530942 被选召的精锐大师","regdate":1260522552,"mute_time":null,"postnum":7977,"rvrc":82,"money":390924,"thisvisit":1646269633,"signature":"再见，艾泽拉斯","nickname":null,"bit_data":169083459,"buffs":{"120":{"0":4673177,"1":1649435824,"2":120,"3":4,"4":0,"5":912235 } } },"60714718":{"uid":60714718,"username":"冰心呀","credit":169083392,"medal":null,"reputation":"61_15","groupid":-1,"memberid":39,"avatar":"http://img.nga.178.com/avatars/2002/ede/9e6/003/60714718_0.jpg?47","yz":4,"site":null,"honor":null,"regdate":1565327290,"mute_time":null,"postnum":1955,"rvrc":10,"money":3100,"thisvisit":1646374697,"signature":"止水","nickname":null,"bit_data":169083392 },"60083653":{"uid":60083653,"username":"简灬生活4434","credit":1311232,"medal":null,"reputation":"61_1,45_-150,2_-150","groupid":-1,"memberid":39,"avatar":"http://img.nga.178.com/avatars/2002/dc5/94c/003/60083653_0.jpg?28","yz":4,"site":null,"honor":null,"regdate":1541826973,"mute_time":null,"postnum":470,"rvrc":10,"money":200,"thisvisit":1646376706,"signature":"Selama ashal&#39;anore","nickname":null,"bit_data":1311232 },"63481714":{"uid":63481714,"username":"UID63481714","credit":30670912,"medal":null,"reputation":null,"groupid":-1,"memberid":39,"avatar":null,"yz":-5,"site":null,"honor":null,"regdate":1628811441,"mute_time":null,"postnum":196,"rvrc":10,"money":0,"thisvisit":1637225806,"signature":null,"nickname":null,"bit_data":30670912,"buffs":{"125":{"0":0,"1":1,"2":125,"3":0,"4":0,"5":871746 } } },"38094317":{"uid":38094317,"username":"卡集量贩店","credit":169091072,"medal":"260","reputation":"53_-150,90_15,61_1","groupid":-1,"memberid":39,"avatar":"https://img.nga.178.com/avatars/2002/5ed/454/002/38094317_0.png?93","yz":4,"site":null,"honor":" 1567530942 社会性死亡的黄金氪金党","regdate":1457413674,"mute_time":null,"postnum":2878,"rvrc":11,"money":54809,"thisvisit":1646360283,"signature":null,"nickname":null,"bit_data":169091072 },"17997869":{"uid":17997869,"username":"foxsusu","credit":135528960,"medal":null,"reputation":"61_2,450001_40,450008_40","groupid":-1,"memberid":39,"avatar":"https://img.nga.178.com/avatars/2002/02d/12a/001/17997869_0.jpg?72","yz":4,"site":null,"honor":null,"regdate":1341515348,"mute_time":null,"postnum":2523,"rvrc":10,"money":15300,"thisvisit":1646353638,"signature":null,"nickname":null,"bit_data":135528960 },"1625795":{"uid":1625795,"username":"┢┦aΡｐy兎寶","credit":169091072,"medal":"207","reputation":"67_650,61_311","groupid":-1,"memberid":39,"avatar":null,"yz":4,"site":null,"honor":null,"regdate":1234788460,"mute_time":null,"postnum":7482,"rvrc":11,"money":23985,"thisvisit":1646362477,"signature":"爸比的小魔王请一定健康快乐的成长！","nickname":null,"bit_data":169091072 },"7390009":{"uid":7390009,"username":"sunyijie","credit":135593984,"medal":null,"reputation":"61_1","groupid":-1,"memberid":39,"avatar":null,"yz":4,"site":null,"honor":null,"regdate":1279244153,"mute_time":null,"postnum":22,"rvrc":10,"money":0,"thisvisit":1646197716,"signature":null,"nickname":null,"bit_data":135593984 },"62531673":{"uid":62531673,"username":"Shzry","credit":169091072,"medal":null,"reputation":"61_2,192_30,199_45,130_60,450008_10","groupid":-1,"memberid":39,"avatar":"http://img.nga.178.com/avatars/2002/859/ba2/003/62531673_0.jpg?94","yz":4,"site":null,"honor":null,"regdate":1601095382,"mute_time":null,"postnum":27,"rvrc":10,"money":3600,"thisvisit":1646342754,"signature":"血液与美酒共享一色","nickname":null,"bit_data":169091072 },"62629800":{"uid":62629800,"username":"可莉炸鱼","credit":135536640,"medal":null,"reputation":"61_8,130_50,91_35,450001_20,450003_30","groupid":-1,"memberid":39,"avatar":"https://img.nga.178.com/avatars/2002/7a8/bba/003/62629800_0.png?60","yz":4,"site":null,"honor":null,"regdate":1603864166,"mute_time":null,"postnum":251,"rvrc":10,"money":5800,"thisvisit":1646149013,"signature":null,"nickname":null,"bit_data":135536640 },"__GROUPS":{"39":{"0":"学徒","1":622816,"2":39 },"42":{"0":"警告等级1","1":622816,"2":42 },"73":{"0":"学徒","1":1016032,"2":73 },"76":{"0":"助手","1":1016032,"2":76 } },"__MEDALS":{"262":{"0":"262.gif","1":"猴年大吉","2":"猴年大吉","3":262 },"207":{"0":"207.gif","1":"爆竹声中旧岁除","2":"一支红杏出墙来","3":207 },"56":{"0":"_55.gif","1":"NGA七周年","2":"艾泽拉斯国家地理七周年成长历程的见证者。","3":56 },"336":{"0":"336.gif","1":"民生银行信用卡","2":"……","3":336 },"335":{"0":"335.gif","1":"招商银行信用卡","2":"……","3":335 },"261":{"0":"261.gif","1":"神秘礼盒","2":"(空的)","3":261 },"425":{"0":"425.gif","1":"伊利丹·怒风","2":"……","3":425 },"90":{"0":"90.gif","1":"一箭穿心","2":"情人节纪念","3":90 },"215":{"0":"215.gif","1":"京东游戏","2":"京东游戏  点击购买","3":215 },"103":{"0":"103.gif","1":"好主顾-","2":"商城购物纪念～","3":103 },"333":{"0":"333.gif","1":"T恤","2":"限量T恤幸运加成","3":333 },"273":{"0":"273.gif","1":"咸鱼","2":"不拿第一和咸鱼有什么区别~","3":273 },"347":{"0":"347.gif","1":"企鹅帽","2":"企鹅帽","3":347 },"341":{"0":"341.gif","1":"干杯","2":"干杯","3":341 },"109":{"0":"109.gif","1":"bigfoot","2":"bigfoot测试纪念","3":109 },"272":{"0":"272.gif","1":"棒棒糖","2":"叔叔请你吃棒棒糖","3":272 },"260":{"0":"260.gif","1":"一周年","2":"连续签到一年","3":260 } },"__REPUTATIONS":{"-7955747":{"62653695":"0","60409396":"0","63585328":"0","60392889":"0","135020":"-150","1625795":"0","63526647":"0","13032547":"0","38834120":"0","60122426":"0","4673177":"0","60714718":"0","60083653":"0","63481714":"-150","38094317":"0","17997869":"0","43107923":0,"1490433":0,"61529001":0,"62629800":0,"7390009":0,"62531673":0,"156464":0,"0":"用户圣光礼赞(7955747)的声望" } } } )
+//userinfoend
+__CUSTOM_LEVEL=[{r:-501,n:"离人"},{r:-450,n:"遗恨"},{r:-300,n:"负心"},{r:-150,n:"前任"},{r:-1,n:"过客"},{r:0,n:"酌客"},{r:150,n:"说书人"},{r:1500,n:"万人迷"}]
+
+__SELECTED_FORUM='-7955747'
+commonui.postArg.setDefault(-7955747,'',29361289,'43107923','','','',',7955747,732501,1364373,13313282,1654059008t,365390,1654059008t,40251935,1654059008t,42138943,1654059008t,1238170,1654059008t,598728,1654059008t,39945321,1654091776t,1058763,','')
+commonui.aE(document,'mouseup',function(e){commonui.quoteTo.hideWindow(e)})
+</script>
+
+<div id='m_nav' class='module_wrap'>
+<div class='nav'><a href='/' class='nav_root'>NGA玩家社区</a><span class='nav_spr'>&raquo;</span><a href='/thread.php?fid=-7955747' class='nav_link' data-fb='8384'>晴风村</a><span class='nav_spr'>&raquo;</span><h1><a href='/read.php?tid=29361289' class='nav_link' data-fb=''>走不出来……</a></h1><div class='clear'></div><a id='topNavAnchor'></a>
+</div>
+</div><script type='text/javascript'>commonui.advNav($('m_nav'))</script>
+
+<div id='m_pbtntop' class='module_wrap'>
+<div class='w100'>
+<div class='right_' id='postbtop'><a href='post.php?action=reply&fid=-7955747&tid=29361289'>发表回复</a><script type='text/javascript'>commonui.topicBtn.load($('postbtop'),-7955747,29361289)</script></div><div class='left' name='pageball' id='pagebtop'><a href='/read.php?tid=29361289&page=6' title='上一页' class='pager_spacer'>上一页(6)</a><a href='/read.php?tid=29361289&page=8' title='下一页' class='pager_spacer'>下一页(8)</a><span id='pageBtnHere' class='x'></span><script>var __PAGE = {0:'/read.php?tid=29361289',1:8,2:7,3:20};commonui.pageBtn(document.getElementById('pageBtnHere').parentNode,__PAGE,true)</script></div><div class='clear'></div>
+</div>
+</div>
+
+<h1 class='x'>走不出来……</h1>
+<div id='m_posts' class='module_wrap'>
+<div class='w100' id='m_posts_c'>
+<!--postliststart-->
+
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow120' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo120' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=43107923' id='postauthor120' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer120'><a id='pid565346974Anchor'></a><a name='l120'></a>
+			<div class='postBtnPos' id='postBtnPos120'></div>
+			<div class='postInfo' id='postInfo120'><span id='postdate120' title='reply time'>2021-11-11 17:29</span></div>
+			<span id='postcontentandsubject120'>
+				<h3 id='postsubject120'></h3><br/>
+				<span id='postcontent120' class='postcontent ubbcode'>姐姐节哀，加油唉[s:ac:愁]</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign120' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign120').parentNode.nextSibling,120,'-7955747')
+commonui.postArg.proc( 120,
+$('postcontainer120'),$('postsubject120'),$('postcontent120'),$('postsign120'),$('posterinfo120'),$('postInfo120'),$('postBtnPos120'),
+null,null,565346974,0,
+null,'43107923',1636622979,'0,0,0','14',
+'','','7 iOS','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow120')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow121' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo121' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=1490433' id='postauthor121' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer121'><a id='pid565350891Anchor'></a><a name='l121'></a>
+			<div class='postBtnPos' id='postBtnPos121'></div>
+			<div class='postInfo' id='postInfo121'><span id='postdate121' title='reply time'>2021-11-11 17:46</span></div>
+			<span id='postcontentandsubject121'>
+				<h3 id='postsubject121'></h3><br/>
+				<span id='postcontent121' class='postcontent ubbcode'>姐姐，节哀…<br/>还有小孩陪伴着，别放弃</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign121' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign121').parentNode.nextSibling,121,'-7955747')
+commonui.postArg.proc( 121,
+$('postcontainer121'),$('postsubject121'),$('postcontent121'),$('postsign121'),$('posterinfo121'),$('postInfo121'),$('postBtnPos121'),
+null,null,565350891,0,
+null,'1490433',1636623960,'0,0,0','34',
+'','','8 Android','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow121')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow122' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo122' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=61529001' id='postauthor122' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer122'><a id='pid565351394Anchor'></a><a name='l122'></a>
+			<div class='postBtnPos' id='postBtnPos122'></div>
+			<div class='postInfo' id='postInfo122'><span id='postdate122' title='reply time'>2021-11-11 17:48</span></div>
+			<span id='postcontentandsubject122'>
+				<h3 id='postsubject122'></h3><br/>
+				<span id='postcontent122' class='postcontent ubbcode'>爬楼爬得眼泪流下来[s:ac:哭]<br/>姐姐节哀</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign122' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign122').parentNode.nextSibling,122,'-7955747')
+commonui.postArg.proc( 122,
+$('postcontainer122'),$('postsubject122'),$('postcontent122'),$('postsign122'),$('posterinfo122'),$('postInfo122'),$('postBtnPos122'),
+null,null,565351394,0,
+null,'61529001',1636624082,'0,0,0','24',
+'','','7 iOS','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow122')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow123' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo123' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=62629800' id='postauthor123' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer123'><a id='pid565352761Anchor'></a><a name='l123'></a>
+			<div class='postBtnPos' id='postBtnPos123'></div>
+			<div class='postInfo' id='postInfo123'><span id='postdate123' title='reply time'>2021-11-11 17:53</span></div>
+			<span id='postcontentandsubject123'>
+				<h3 id='postsubject123'></h3><br/>
+				<span id='postcontent123' class='postcontent ubbcode'>节哀，加油[s:a2:哭]</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign123' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign123').parentNode.nextSibling,123,'-7955747')
+commonui.postArg.proc( 123,
+$('postcontainer123'),$('postsubject123'),$('postcontent123'),$('postsign123'),$('posterinfo123'),$('postInfo123'),$('postBtnPos123'),
+null,null,565352761,0,
+null,'62629800',1636624409,'0,0,0','8',
+'','','8 Android','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow123')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow124' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo124' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=62653695' id='postauthor124' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer124'><a id='pid565353399Anchor'></a><a name='l124'></a>
+			<div class='postBtnPos' id='postBtnPos124'></div>
+			<div class='postInfo' id='postInfo124'><span id='postdate124' title='reply time'>2021-11-11 17:56</span></div>
+			<span id='postcontentandsubject124'>
+				<h3 id='postsubject124'></h3><br/>
+				<span id='postcontent124' class='postcontent ubbcode'>这结局我不能接受<br/>明明看到曙光结果变成这样</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign124' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign124').parentNode.nextSibling,124,'-7955747')
+commonui.postArg.proc( 124,
+$('postcontainer124'),$('postsubject124'),$('postcontent124'),$('postsign124'),$('posterinfo124'),$('postInfo124'),$('postBtnPos124'),
+null,null,565353399,0,
+null,'62653695',1636624573,'0,0,0','40',
+'','','100 /','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow124')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow125' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo125' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=60409396' id='postauthor125' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer125'><a id='pid565354043Anchor'></a><a name='l125'></a>
+			<div class='postBtnPos' id='postBtnPos125'></div>
+			<div class='postInfo' id='postInfo125'><span id='postdate125' title='reply time'>2021-11-11 17:58</span></div>
+			<span id='postcontentandsubject125'>
+				<h3 id='postsubject125'></h3><br/>
+				<span id='postcontent125' class='postcontent ubbcode'>你老公的希望是什么，你好好想想，你应该带着他的希望好好的活下去，这也是证明了他来这世界的价值。你要好好的让他放心</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign125' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign125').parentNode.nextSibling,125,'-7955747')
+commonui.postArg.proc( 125,
+$('postcontainer125'),$('postsubject125'),$('postcontent125'),$('postsign125'),$('posterinfo125'),$('postInfo125'),$('postBtnPos125'),
+null,null,565354043,0,
+null,'60409396',1636624731,'0,0,0','112',
+'','','8 Android','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow125')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow126' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo126' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=63585328' id='postauthor126' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer126'><a id='pid565354274Anchor'></a><a name='l126'></a>
+			<div class='postBtnPos' id='postBtnPos126'></div>
+			<div class='postInfo' id='postInfo126'><span id='postdate126' title='reply time'>2021-11-11 17:59</span></div>
+			<span id='postcontentandsubject126'>
+				<h3 id='postsubject126'></h3><br/>
+				<span id='postcontent126' class='postcontent ubbcode'>照顾好自己，以后的路还要继续走下去。</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign126' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign126').parentNode.nextSibling,126,'-7955747')
+commonui.postArg.proc( 126,
+$('postcontainer126'),$('postsubject126'),$('postcontent126'),$('postsign126'),$('posterinfo126'),$('postInfo126'),$('postBtnPos126'),
+null,null,565354274,0,
+null,'63585328',1636624793,'0,0,0','36',
+'','','7 iOS','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow126')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow127' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo127' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=7390009' id='postauthor127' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer127'><a id='pid565355774Anchor'></a><a name='l127'></a>
+			<div class='postBtnPos' id='postBtnPos127'></div>
+			<div class='postInfo' id='postInfo127'><span id='postdate127' title='reply time'>2021-11-11 18:06</span></div>
+			<span id='postcontentandsubject127'>
+				<h3 id='postsubject127'></h3><br/>
+				<span id='postcontent127' class='postcontent ubbcode'>节哀，生者还是要努力活下去的，活下去才有希望</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign127' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign127').parentNode.nextSibling,127,'-7955747')
+commonui.postArg.proc( 127,
+$('postcontainer127'),$('postsubject127'),$('postcontent127'),$('postsign127'),$('posterinfo127'),$('postInfo127'),$('postBtnPos127'),
+null,null,565355774,0,
+null,'7390009',1636625199,'0,0,0','44',
+'','','0 /','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow127')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow128' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo128' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=60392889' id='postauthor128' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer128'><a id='pid565357831Anchor'></a><a name='l128'></a>
+			<div class='postBtnPos' id='postBtnPos128'></div>
+			<div class='postInfo' id='postInfo128'><span id='postdate128' title='reply time'>2021-11-11 18:15</span></div>
+			<span id='postcontentandsubject128'>
+				<h3 id='postsubject128'></h3><br/>
+				<span id='postcontent128' class='postcontent ubbcode'>加油！ 照顾好自己和孩子[s:ac:愁]</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign128' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign128').parentNode.nextSibling,128,'-7955747')
+commonui.postArg.proc( 128,
+$('postcontainer128'),$('postsubject128'),$('postcontent128'),$('postsign128'),$('posterinfo128'),$('postInfo128'),$('postBtnPos128'),
+null,null,565357831,0,
+null,'60392889',1636625755,'0,0,0','20',
+'','','8 Android','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow128')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow129' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo129' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=135020' id='postauthor129' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer129'><a id='pid565358597Anchor'></a><a name='l129'></a>
+			<div class='postBtnPos' id='postBtnPos129'></div>
+			<div class='postInfo' id='postInfo129'><span id='postdate129' title='reply time'>2021-11-11 18:19</span></div>
+			<span id='postcontentandsubject129'>
+				<h3 id='postsubject129'></h3><br/>
+				<span id='postcontent129' class='postcontent ubbcode'>妈的 看得我难受； <br/><br/>啥也帮不了， /cast 王者祝福</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign129' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign129').parentNode.nextSibling,129,'-7955747')
+commonui.postArg.proc( 129,
+$('postcontainer129'),$('postsubject129'),$('postcontent129'),$('postsign129'),$('posterinfo129'),$('postInfo129'),$('postBtnPos129'),
+null,null,565358597,0,
+null,'135020',1636625967,'0,0,0','41',
+'','','7 iOS','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow129')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow130' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo130' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=62531673' id='postauthor130' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer130'><a id='pid565358742Anchor'></a><a name='l130'></a>
+			<div class='postBtnPos' id='postBtnPos130'></div>
+			<div class='postInfo' id='postInfo130'><span id='postdate130' title='reply time'>2021-11-11 18:20</span></div>
+			<span id='postcontentandsubject130'>
+				<h3 id='postsubject130'></h3><br/>
+				<span id='postcontent130' class='postcontent ubbcode'>姐姐节哀[s:a2:哭][s:a2:哭]<br/>要加油缓过来迎接新的生活呀[s:a2:哭]</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign130' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign130').parentNode.nextSibling,130,'-7955747')
+commonui.postArg.proc( 130,
+$('postcontainer130'),$('postsubject130'),$('postcontent130'),$('postsign130'),$('posterinfo130'),$('postInfo130'),$('postBtnPos130'),
+null,null,565358742,0,
+null,'62531673',1636626006,'0,0,0','28',
+'','','7 iOS','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow130')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow131' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo131' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=156464' id='postauthor131' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer131'><a id='pid565358836Anchor'></a><a name='l131'></a>
+			<div class='postBtnPos' id='postBtnPos131'></div>
+			<div class='postInfo' id='postInfo131'><span id='postdate131' title='reply time'>2021-11-11 18:20</span></div>
+			<span id='postcontentandsubject131'>
+				<h3 id='postsubject131'></h3><br/>
+				<span id='postcontent131' class='postcontent ubbcode'>[quote][pid=565101033,29361289,5]Reply[/pid] [b]Post by [uid=13032547]荷兰小小猪[/uid] (2021-11-10 17:56):[/b]<br/><br/>特别嘲讽的是，他每年都去医院体检，就没查过血糖……[/quote]<br/><br/>体检血常规里就有血糖吧</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign131' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign131').parentNode.nextSibling,131,'-7955747')
+commonui.postArg.proc( 131,
+$('postcontainer131'),$('postsubject131'),$('postcontent131'),$('postsign131'),$('posterinfo131'),$('postInfo131'),$('postBtnPos131'),
+null,null,565358836,0,
+null,'156464',1636626033,'0,1,0','27',
+'','','8 Android','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow131')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow132' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo132' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=1625795' id='postauthor132' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer132'><a id='pid565360441Anchor'></a><a name='l132'></a>
+			<div class='postBtnPos' id='postBtnPos132'></div>
+			<div class='postInfo' id='postInfo132'><span id='postdate132' title='reply time'>2021-11-11 18:27</span></div>
+			<span id='postcontentandsubject132'>
+				<h3 id='postsubject132'></h3><br/>
+				<span id='postcontent132' class='postcontent ubbcode'>人生不如意十之八九，我想他那么爱你和孩子，肯定还是希望你和孩子好好生活的，你以后的日子还长，肯定还能碰见更好的人的。</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign132' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign132').parentNode.nextSibling,132,'-7955747')
+commonui.postArg.proc( 132,
+$('postcontainer132'),$('postsubject132'),$('postcontent132'),$('postsign132'),$('posterinfo132'),$('postInfo132'),$('postBtnPos132'),
+null,null,565360441,0,
+null,'1625795',1636626451,'0,0,0','116',
+'','','8 Android','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow132')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow133' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo133' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=63526647' id='postauthor133' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer133'><a id='pid565363648Anchor'></a><a name='l133'></a>
+			<div class='postBtnPos' id='postBtnPos133'></div>
+			<div class='postInfo' id='postInfo133'><span id='postdate133' title='reply time'>2021-11-11 18:42</span></div>
+			<span id='postcontentandsubject133'>
+				<h3 id='postsubject133'></h3><br/>
+				<span id='postcontent133' class='postcontent ubbcode'>哎 不知道说什么<br/>坚强点吧</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign133' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign133').parentNode.nextSibling,133,'-7955747')
+commonui.postArg.proc( 133,
+$('postcontainer133'),$('postsubject133'),$('postcontent133'),$('postsign133'),$('posterinfo133'),$('postInfo133'),$('postBtnPos133'),
+null,null,565363648,0,
+null,'63526647',1636627348,'0,0,0','22',
+'','','7 iOS','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow133')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow134' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo134' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=13032547' id='postauthor134' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer134'><a id='pid565387850Anchor'></a><a name='l134'></a>
+			<div class='postBtnPos' id='postBtnPos134'></div>
+			<div class='postInfo' id='postInfo134'><span id='postdate134' title='reply time'>2021-11-11 20:48</span></div>
+			<span id='postcontentandsubject134'>
+				<h3 id='postsubject134'></h3><br/>
+				<span id='postcontent134' class='postcontent ubbcode'>[quote][pid=565358836,29361289,7]Reply[/pid] [b]Post by [uid=156464]d_n[/uid] (2021-11-11 18:20):[/b]<br/><br/>体检血常规里就有血糖吧[/quote]<br/><br/>并没有，血常规都是生病时候查的白细胞红细胞之类的，实际上血糖是另外开的，5块钱，再拿一个试管的，真的很嘲讽……因为一般一型糖尿病患者都知道自己有</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign134' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign134').parentNode.nextSibling,134,'-7955747')
+commonui.postArg.proc( 134,
+$('postcontainer134'),$('postsubject134'),$('postcontent134'),$('postsign134'),$('posterinfo134'),$('postInfo134'),$('postBtnPos134'),
+null,null,565387850,0,
+null,'13032547',1636634890,'0,0,0','148',
+'','','7 iOS','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow134')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow135' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo135' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=38834120' id='postauthor135' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer135'><a id='pid591737883Anchor'></a><a name='l135'></a>
+			<div class='postBtnPos' id='postBtnPos135'></div>
+			<div class='postInfo' id='postInfo135'><span id='postdate135' title='reply time'>2022-02-26 05:42</span></div>
+			<span id='postcontentandsubject135'>
+				<h3 id='postsubject135'></h3><br/>
+				<span id='postcontent135' class='postcontent ubbcode'>[s:ac:茶][s:ac:茶][s:ac:茶][s:ac:茶]</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign135' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign135').parentNode.nextSibling,135,'-7955747')
+commonui.postArg.proc( 135,
+$('postcontainer135'),$('postsubject135'),$('postcontent135'),$('postsign135'),$('posterinfo135'),$('postInfo135'),$('postBtnPos135'),
+null,null,591737883,0,
+null,'38834120',1645825369,'0,0,0','-8',
+'','','8 Android','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow135')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow136' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo136' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=60122426' id='postauthor136' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer136'><a id='pid592176529Anchor'></a><a name='l136'></a>
+			<div class='postBtnPos' id='postBtnPos136'></div>
+			<div class='postInfo' id='postInfo136'><span id='postdate136' title='reply time'>2022-02-28 10:24</span></div>
+			<span id='postcontentandsubject136'>
+				<h3 id='postsubject136'></h3><br/>
+				<span id='postcontent136' class='postcontent ubbcode'>[s:a2:哭][s:a2:哭][s:a2:哭]</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign136' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign136').parentNode.nextSibling,136,'-7955747')
+commonui.postArg.proc( 136,
+$('postcontainer136'),$('postsubject136'),$('postcontent136'),$('postsign136'),$('posterinfo136'),$('postInfo136'),$('postBtnPos136'),
+null,null,592176529,0,
+null,'60122426',1646015065,'0,0,0','-6',
+'','','7 iOS','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow136')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow137' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo137' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=4673177' id='postauthor137' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer137'><a id='pid592179151Anchor'></a><a name='l137'></a>
+			<div class='postBtnPos' id='postBtnPos137'></div>
+			<div class='postInfo' id='postInfo137'><span id='postdate137' title='reply time'>2022-02-28 10:34</span></div>
+			<span id='postcontentandsubject137'>
+				<h3 id='postsubject137'></h3><br/>
+				<span id='postcontent137' class='postcontent ubbcode'>命运多舛，祈福</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign137' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign137').parentNode.nextSibling,137,'-7955747')
+commonui.postArg.proc( 137,
+$('postcontainer137'),$('postsubject137'),$('postcontent137'),$('postsign137'),$('posterinfo137'),$('postInfo137'),$('postBtnPos137'),
+null,null,592179151,0,
+null,'4673177',1646015653,'0,0,0','14',
+'','','0 /','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow137')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow138' class='postrow row2'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo138' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=60714718' id='postauthor138' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer138'><a id='pid592185125Anchor'></a><a name='l138'></a>
+			<div class='postBtnPos' id='postBtnPos138'></div>
+			<div class='postInfo' id='postInfo138'><span id='postdate138' title='reply time'>2022-02-28 10:54</span></div>
+			<span id='postcontentandsubject138'>
+				<h3 id='postsubject138'></h3><br/>
+				<span id='postcontent138' class='postcontent ubbcode'>[b]Reply to [pid=565247763,29361289,6]Reply[/pid] Post by [uid=13032547]荷兰小小猪[/uid] (2021-11-11 10:57)[/b]节哀，找到一个有共同爱好还这么爱你的确实不容易。为了孩子坚强一些，早点走出来，医生有问题就问责找赔偿，愿岁月善待你。</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign138' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign138').parentNode.nextSibling,138,'-7955747')
+commonui.postArg.proc( 138,
+$('postcontainer138'),$('postsubject138'),$('postcontent138'),$('postsign138'),$('posterinfo138'),$('postInfo138'),$('postBtnPos138'),
+null,null,592185125,0,
+null,'60714718',1646016877,'0,0,0','149',
+'','','0 /','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow138')
+</script>
+
+<table class='forumbox postbox' cellspacing='1px'>
+	<tr id='post1strow139' class='postrow row1'>
+		<td class='c1' style='vertical-align:top;text-align:center'>
+			<span id='posterinfo139' class='posterinfo'>
+				<a href='nuke.php?func=ucp&uid=60083653' id='postauthor139' class='author b'></a>
+			</span>
+		</td>
+		<td class='c2' style='vertical-align:top' id='postcontainer139'><a id='pid592186252Anchor'></a><a name='l139'></a>
+			<div class='postBtnPos' id='postBtnPos139'></div>
+			<div class='postInfo' id='postInfo139'><span id='postdate139' title='reply time'>2022-02-28 10:58</span></div>
+			<span id='postcontentandsubject139'>
+				<h3 id='postsubject139'></h3><br/>
+				<span id='postcontent139' class='postcontent ubbcode'>晴天霹雳，我也不知道该怎么劝你了，世事难料~！<br/><br/>为什么好人总是不能长命呢，哎~！</span>
+				<br/>
+			</span>			<div class='clear'></div>
+			<div id='postsign139' class='x'></div>			</td><td class='adshid'></td>
+	</tr>
+</table><script>
+ngaAds.bbs_ads8_load_new($('postsign139').parentNode.nextSibling,139,'-7955747')
+commonui.postArg.proc( 139,
+$('postcontainer139'),$('postsubject139'),$('postcontent139'),$('postsign139'),$('posterinfo139'),$('postInfo139'),$('postBtnPos139'),
+null,null,592186252,0,
+null,'60083653',1646017100,'0,0,0','76',
+'','','0 /','',null,0 )
+if(ngaAds.bbs_ads31_gen)ngaAds.bbs_ads31_gen('post1strow139')
+</script>
+<!--postlistend-->
+</div>
+</div>
+
+
+<div id='m_pbtnbtm' class='module_wrap'><div class='w100'>
+<div class='right_' id='postbbtm'><a href='post.php?action=reply&fid=-7955747&tid=29361289'>发表回复</a><script type='text/javascript'>commonui.topicBtn.load($('postbbtm'),-7955747,29361289)</script></div><div class='left' name='pageball' id='pagebbtm'><a href='/read.php?tid=29361289&page=6' title='上一页' class='pager_spacer'>上一页(6)</a><a href='/read.php?tid=29361289&page=8' title='下一页' class='pager_spacer'>下一页(8)</a><span id='pageBtnHere' class='x'></span><script>var __PAGE = {0:'/read.php?tid=29361289',1:8,2:7,3:20};commonui.pageBtn(document.getElementById('pageBtnHere').parentNode,__PAGE,true)</script></div><div class='clear'></div>
+</div></div>
+
+<div id='b_nav' class='module_wrap'>
+<div class='nav'><a href='/' class='nav_root'>NGA玩家社区</a><span class='nav_spr'>&raquo;</span><a href='/thread.php?fid=-7955747' class='nav_link' data-fb='8384'>晴风村</a><span class='nav_spr'>&raquo;</span><h1><a href='/read.php?tid=29361289' class='nav_link' data-fb=''>走不出来……</a></h1><div class='clear'></div></div>
+</div>
+
+<span id='fast_post_c'></span>
+<script type='text/javascript'>
+commonui.advNav($('b_nav'));
+ngaAds.bbs_ads14_gen()
+if(commonui.fastPostUi)commonui.fastPostUi(-7955747,29361289)
+</script>
+
+<br class='clear'/>
+<br/>
+<br/>
+<script>//everypage
+add_pv_count()
+;(function(){
+var w = window,v,l=location.pathname+location.search,fr=w.__fromUrl?w.__fromUrl:null
+if(!w._czc){
+	v=1
+	w._czc=[]
+	}
+if(w.__CURRENT_FID || w.__CURRENT_STID)
+	_czc.push(['_setCustomVar','forum',(w.__CURRENT_STID && (w.__CURRENT_FID==541 || w.__CURRENT_FID==534)) ? 'stid'+__CURRENT_STID : 'fid'+w.__CURRENT_FID,0])
+if(v)
+	__SCRIPTS.asyncLoad(location.protocol+'//w.cnzz.com/c.php?id=30043604',2)
+else
+	setTimeout( function(){_czc.push(['_trackPageview',l,fr])} )//wait location change on ajax
+
+/*if(!window.BI_SDK)
+	__SCRIPTS.asyncLoad('stat',function(){BI_SDK.report('webngaweb','xy-log2',false,true,'startup')})
+else
+	BI_SDK.report('webngaweb','xy-log2',false,true,'startup')*/
+})();
+</script>
+<script>//everypage
+if(ngaAds && ngaAds.syncAfterload)ngaAds.syncAfterload()
+if(window.__JUMP704){__JUMP704=0
+	commonui.alert('网事杂谈 版面暂时不能发帖, 请访问 生活万象 板面')}
+</script>
+<div id='footer' class='cpinfo'><div class='xtxt silver'>商务市场合作: BD@donews.com , 内容合作: wangchuang@donews.com / QQ 972310705 , 违法和不良信息举报电话: 010-60845018 邮箱: jubao@infinities.com.cn , <a href='https://www.12377.cn'>网上有害信息举报专区</a><br/><a href='http://beian.miit.gov.cn'>京ICP备16021487号-5</a> <a href='http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802027588'>京公网安备11010802027588号</a>
+<a key ='5652d13cefbfb049451503f9' logo_size='32x12' logo_type='' href='http://www.anquan.org' style='display:none'><script>//document.write('<scr'+'ipt src="'+location.protocol+'//static.anquan.org/static/outer/js/aq_auth.js" type="text/javasc'+'ript"></scr'+'ipt>')</script></a>
+ <span style='display:inline-block;vertical-align:middle;'><script>document.write('<scr'+'ipt src="'+location.protocol+'//kxlogo.knet.cn/seallogo.dll?sn=e18122811010876513vpap000000&size=1" type="text/javasc'+'ript"></scr'+'ipt>')</script></span>
+</div>
+<br/>
+</div>
+
+</div id='mc'>
+</div id='mmc'>
+<script>
+if(commonui.loadUserScript)
+	commonui.loadUserScript()
+commonui.triggerEventDOMContentLoadedAct()
+</script>
+</body>
+</html>
