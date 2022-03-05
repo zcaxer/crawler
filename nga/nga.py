@@ -5,7 +5,7 @@ import os
 from bs4 import BeautifulSoup as bs
 
 
-id = "27525038"
+id = "30934390"
 
 
 cookie = {
@@ -64,8 +64,10 @@ def find_title(html):
     return name, page
 
 
-if __name__ == "__main__":
-    #get_html(id, cookie)
+def get_content_from_html(name):
     for i in range(1, 40):
-        with open(f'firstSexNga/firstSexNga{i}.html', 'r', encoding="gbk") as f:
-            get_content(f, "大家的第一次都是怎么没的")
+        with open(f'{name}/{name}{i}.html', 'r', encoding="gbk") as f:
+            get_content(f, name)
+
+if __name__ == "__main__":
+    get_html(id, cookie)
