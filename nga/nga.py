@@ -1,12 +1,15 @@
+from cmath import log
 import time
 import requests
 import re
 import os
 import json
+import logging
 from bs4 import BeautifulSoup as bs
 
 # TODO:查找回复内容原文并展示
 # TODO:ac娘
+# TODO:重构，单元化
 # TODO:update posts
 # TODO:find post I interested in
 
@@ -15,11 +18,10 @@ p_img_partial = '\[img\]\..+?\[/img\]?'
 p_img = '\[img\].+?\[/img\]'
 ulr_img = 'https://img.nga.178.com/attachments'
 
-id = "30844033"
-#l=['31022622','30902165', '30929995', '30938217','30844033','30627975','29688508']
-l = [  '30312817', '30605933','31008448',
-'31014291', '31003175','31000123', '30993134', '30993134',
-     '30931300','30956222']
+id = "30312817"
+#l=['30819319','29361289','30901158','31022622','30902165', '30929995', '30938217','30844033','30627975','29688508']
+l = ['30605933', '31008448', '31014291', '31003175',
+     '31000123', '30993134', '30993134', '30931300', '30956222']
 
 
 cookie = {
@@ -36,15 +38,18 @@ cookie = {
 
 
 def write_html_head(f, title):
+    logging.info(f'Writing {title} head')
     f.write(
         f'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>{title}</title>\n</head>\n<body>\n')
 
 
 def download_img(url: str, path: str, pic_name: str):
+    logging.info(f'Downloading {pic_name}')
     url_img = 'https://img.nga.178.com/attachments'
     if not os.path.exists(f'{path}/img'):
         os.mkdir(f'{path}/img')
     if os.path.exists(f'{path}/img/{pic_name}'):
+        logging.debug(f'{pic_name} already exists')
         return
     if url[1] == 'm':
         url = url_img+url
@@ -53,6 +58,7 @@ def download_img(url: str, path: str, pic_name: str):
 
 
 def img_content_processor(content: str, title):
+    logging.info(f'Processing {title} img url')
     pattern_img = re.compile(r'(.*?)\[img\]\.?(.+?)\[/img\](.*?)')
     match_img = pattern_img.findall(content)
     if not match_img:
@@ -67,11 +73,13 @@ def img_content_processor(content: str, title):
 
 
 def content_processor(content, f):
+    logging.info('开始处理引用和回复')
     s = ''
     pattern_quote = re.compile(
         'Post by \[uid=\d+\](.*)\[/uid\] \(.*\):\[/b\](.*)\[\/quote\](.*)')
     match_quote = pattern_quote.search(content)
     if match_quote:
+        logging.debug('引用')
         quote_uname = match_quote.groups()[0]
         quote_content = match_quote.groups()[1]
         reply_content = match_quote.groups()[2]
@@ -81,6 +89,7 @@ def content_processor(content, f):
         '\[b\]Reply to \[pid=\d+,\d+,\d+\]Reply\[/pid\] Post by \[uid=\d+\](.*)\[/uid\] \((.*)\)\[/b\](.*)')
     match_reply = pattern_reply.search(content)
     if match_reply:
+        logging.debug('回复')
         post_uname = match_reply.groups()[0]
         post_time = match_reply.groups()[1]
         reply_content = match_reply.groups()[2]
@@ -124,11 +133,13 @@ def get_content(f, html, title):
         up_number = pattern_up.search(s_up_number[i].text).group(1)
         content = img_content_processor(content, title)
         content = content_processor(content, f)
+        logging.info(f'解析完成：{title}：第{id}楼')
         f.write(
             f'<p>{id}:{username},{posttime},{uid},up:{up_number}:<br>{content}</p>\n')
 
 
 def get_title(html):
+    logging.info('开始解析标题')
     soup = bs(html, 'lxml')
     l1 = soup.find("title").text
     pattern1 = re.compile(r'(.*)\sNGA玩家社区')
@@ -136,30 +147,37 @@ def get_title(html):
     l2 = soup.find(id='pageBtnHere')
     pattern2 = re.compile(r',1:(\d+)')
     max_page = int(pattern2.findall(l2.next_sibling.text)[0])
+    logging.info('标题解析完成,title:{title),max_page:{max_page}')
     return title, max_page
 
 
 def get_html(id, cookie):
     r = requests.get(f"https://bbs.nga.cn/read.php?tid={id}", cookies=cookie)
     if r.status_code == 403:
-        print(f'{id}请求失败')
+        logging.warning(f'{id}请求失败')
         return
     html = r.text
     title, max_page = get_title(html)
     if not os.path.exists(title):
+        logging.info(f'创建文件夹{title}')
         os.mkdir(title)
     with open(f'{title}/{title}1.html', 'w', encoding="gbk") as f:
         write_html_head(f, title)
         f.write(r.text)
+        logging.info(f'写入{title}1.html')
     with open(title+r".html", "a+", encoding='utf-8') as w:
         write_html_head(w, title)
+        logging.info(f'开始解析{title}第1页')
         get_content(w, html, title)
         for i in range(2, max_page+1):
+            logging.info(f'开始请求{title}{i}.html')
             time.sleep(2)
             r = requests.get(
                 f"https://bbs.nga.cn/read.php?tid={id}&page={i}", cookies=cookie)
             with open(f'{title}/{title}{i}.html', 'w', encoding="gbk") as f:
                 f.write(r.text)
+                logging.info(f'写入{title}{i}.html')
+            logging.info(f'开始解析{title}第{i}页')
             get_content(w, r.text, title)
         w.write('</body>\n</html>')
 
@@ -176,5 +194,6 @@ def update(l):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     for i in l:
         get_html(i, cookie)
