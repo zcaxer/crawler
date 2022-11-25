@@ -1,0 +1,10 @@
+.idea/
+.vscode/
+*.json
+nga/nga.json
+qlchat/auth.json
+nga/htmls/
+nga/results
+
+qlchat/main_index.html
+qlchat/main_full.html
