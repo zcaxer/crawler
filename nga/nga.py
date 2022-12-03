@@ -22,6 +22,7 @@ class Nga:
     url_img = 'https://img.nga.178.com/attachments'
     url_first_page = "https://nga.178.com/read.php?tid={id}"
     url_page = "https://nga.178.com/read.php?tid={id}&page={page}"
+    url_index = "https://nga.178.com/thread.php?fid=-7"
 
     def __init__(self, id):
         self.html_list = []
@@ -47,13 +48,18 @@ class Nga:
     def start_new(cls):
         for id in cls.new_ids:
             nga=Nga(id)
-            nga.start()
+            try:
+                nga.start()
+            except:
+                logging.debug(f'请求{id}失败')
+                cls.json['new_ids'].remove(id)
 
     @classmethod
-    def update(cls):
+    def start_all(cls):
         for id in cls.ongoing_ids.keys():
             try:
                 page = cls.ongoing_ids[id]['last_page']
+                time.sleep(1)
                 r = cls.session.get(cls.url_page.format(id=id, page=page))
                 soup = bs(r.text, 'lxml')
                 if soup.title == '找不到主题':
@@ -69,7 +75,7 @@ class Nga:
                         nga.title=cls.ongoing_ids[id]['title']
                         for p in range(page, max_page+1):
                             html=nga.get_page(p,True)
-                            with open(f'{nga.title}/htmls/{nga.title}{p}.html', 'w', encoding="gbk") as f:
+                            with open(f'htmls/{nga.title}/{nga.title}{p}.html', 'w', encoding="gbk") as f:
                                 f.write(html)
                                 logging.info(f'写入{nga.title}{p}.html')
                             nga.get_content(p,html)
@@ -100,9 +106,9 @@ class Nga:
 
     def download_img(self, url: str, path: str, pic_name: str):
         logging.info(f'Downloading {pic_name}')
-        if not os.path.exists(f'{path}/img'):
-            os.mkdir(f'{path}/img')
-        if os.path.exists(f'{path}/img/{pic_name}'):
+        if not os.path.exists(f'htmls/{path}/img'):
+            os.mkdir(f'htmls/{path}/img')
+        if os.path.exists(f'htmls/{path}/img/{pic_name}'):
             logging.debug(f'{pic_name} already exists')
             return
         if url[1] == 'm':
@@ -122,7 +128,7 @@ class Nga:
         for i in match_img:
             pic_name = pattern_pic_name.search(i[1]).group(1)
             self.download_img(i[1], self.title, pic_name)
-            post_content += f'{i[0]}<img src="{self.title}/img/{pic_name}">{i[2]}'
+            post_content += f'{i[0]}<img src="../htmls/{self.title}/img/{pic_name}">{i[2]}'
         return post_content
 
     def post_processor(self, original_post_content):
@@ -214,7 +220,7 @@ class Nga:
             if r.status_code == 403:
                 logging.warning(f'第{page}页请求失败')
                 return
-        elif refresh_old_html == False and os.path.exists(f'{self.title}/{self.title}{page}.html'):
+        elif refresh_old_html == False and os.path.exists(f'htmls/{self.title}/{self.title}{page}.html'):
             with open(f'htmls/{self.title}/{self.title}{page}.html', 'r', encoding='gbk') as f:
                 return f.read()
         else:
@@ -233,7 +239,7 @@ class Nga:
         self.last_page = self.get_max_page(self.soup)
         if not os.path.exists(self.title):
             logging.info(f'创建文件夹{self.title}')
-            os.mkdir(self.title)
+            os.mkdir(f'htmls/{self.title}')
         with open(f'htmls/{self.title}/{self.title}1.html', 'w', encoding="gbk") as f:
             f.write(page1)
             logging.info(f'写入{self.title}1.html')
@@ -271,11 +277,25 @@ class Nga:
                 f'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>{self.title}</title>\n</head>\n<body>\n')
             writer.write(self.result_html)
             writer.write('</body>\n</html>')
+    
+    @classmethod 
+    def get_index(cls):
+        r=cls.session.get(cls.url_index)
+        content=r.text.replace('�', '')
+        with open('index.html','w') as f:
+            f.write(content)
+        soup=bs(content,'lxml')
+        list=soup.find_all('a',{'class':'topic'})
+        replies_list = soup.find_all('a', {'class': 'replies'})
+        print(list[-1]['href'],list[-1].text)
+        print(replies_list[-1].text)
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     Nga.init()
-    Nga.update()
+    Nga.start_all()
     Nga.start_new()
+    Nga.get_index()
     Nga.dump()
 

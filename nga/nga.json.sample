@@ -1,0 +1,17 @@
+{
+  "new_ids": [987654,123456],
+  "cookies": {
+    "":"",
+    ":"
+  },
+  "ongoing_ids": {
+       "123456": {
+      "title": "xxxx",
+      "last_page": 37,
+      "last_post": "733",
+      "last_time": "2022-11-18 22:36"
+    },
+    {}
+  },
+  "finished_ids": {}
+}
