@@ -30,11 +30,11 @@ class Nga:
         self.last_post_uid = ''
         self.last_posttime = ''
         self.last_page = ''
-        self.result_html=''
+        self.result_html = ''
 
     @classmethod
     def init(cls):
-        with open('nga.json', 'r',encoding='utf-8') as f:
+        with open('nga.json', 'r', encoding='utf-8') as f:
             cls.json = json.load(f)
             cls.new_ids = cls.json['new_ids']
             cls.ongoing_ids: dict = cls.json['ongoing_ids']
@@ -46,8 +46,12 @@ class Nga:
 
     @classmethod
     def start_new(cls):
-        for id in cls.new_ids:
-            nga=Nga(id)
+        while True:
+            try:
+                id = cls.json['new_ids'][0]
+            except:
+                break
+            nga = Nga(id)
             try:
                 nga.start()
             except:
@@ -56,13 +60,15 @@ class Nga:
 
     @classmethod
     def start_all(cls):
-        for id in cls.ongoing_ids.keys():
+        keys = list(cls.ongoing_ids.keys())
+        for id in keys:
             try:
                 page = cls.ongoing_ids[id]['last_page']
                 time.sleep(1)
                 r = cls.session.get(cls.url_page.format(id=id, page=page))
                 soup = bs(r.text, 'lxml')
-                if soup.title == '找不到主题':
+                t = soup.title.text
+                if t == '找不到主题' or t == "帖子发布或回复时间超过限制" or t == "帖子被设为隐藏" or t == '帖子审核未通过' or t == "帖子正等待审核":
                     cls.json['finished_ids'].update({id: cls.ongoing_ids[id]})
                     cls.json['ongoing_ids'].pop(id)
                     logging.info(f'id:{id} finished')
@@ -71,38 +77,38 @@ class Nga:
                     last_posttime = s_posttime[-1].text
                     if last_posttime != cls.ongoing_ids[id]['last_time']:
                         max_page = Nga.get_max_page(soup)
-                        nga=Nga(id)
-                        nga.title=cls.ongoing_ids[id]['title']
+                        nga = Nga(id)
+                        nga.title = cls.ongoing_ids[id]['title']
                         for p in range(page, max_page+1):
-                            html=nga.get_page(p,True)
+                            html = nga.get_page(p, True)
                             with open(f'htmls/{nga.title}/{nga.title}{p}.html', 'w', encoding="gbk") as f:
                                 f.write(html)
                                 logging.info(f'写入{nga.title}{p}.html')
-                            nga.get_content(p,html)
-                        
+                            nga.get_content(p, html)
+
                         with open(f'results/{nga.title}.html', "r", encoding='utf-8') as r:
-                            old_lines=r.readlines()[7:-2]
-                            new_lines=nga.result_html.splitlines()
+                            old_lines = r.readlines()[7:-2]
+                            new_lines = nga.result_html.splitlines()
                             pattern = re.compile(
                                 '\s*\<\s*p\s*\>\s*(\d+)\s*:.*\<\s*/p\s*\>\s*')
                             while True:
-                                n=int(pattern.match(new_lines[0]).group(1))    
+                                n = int(pattern.match(new_lines[0]).group(1))
                                 if n <= int(cls.ongoing_ids[id]['last_post']):
                                     new_lines.pop(0)
-                                else:break
-                            nga.result_html=''
+                                else:
+                                    break
+                            nga.result_html = ''
                             for line in old_lines:
                                 nga.result_html = nga.result_html+line
                             for line in new_lines:
                                 nga.result_html = nga.result_html+line+'\n'
-                        nga.last_page=max_page
+                        nga.last_page = max_page
                         nga.write_to_result_html()
                         nga.finish()
-                        Nga.dump()
+                Nga.dump()
             except Exception as e:
                 traceback.print_exc()
                 logging.info(f'{id}请求失败')
-
 
     def download_img(self, url: str, path: str, pic_name: str):
         logging.info(f'Downloading {pic_name}')
@@ -158,14 +164,14 @@ class Nga:
             original_post_content = '未匹配到'
             match = pattern_post_content.search(self.result_html)
             if match:
-                original_post_content = match.group(1)                    
+                original_post_content = match.group(1)
             post_content += f'<blockquote><p>{post_uname}:{original_post_content}</p></blockquote>{reply_content}'
             return post_content
         return original_post_content
 
-    def get_content(self, page,html=None):
+    def get_content(self, page, html=None):
         logging.debug(f'开始解析第{page}页')
-        html=html or self.html_list[page-1]
+        html = html or self.html_list[page-1]
         soup = bs(html, 'lxml')
         pattern_uid = re.compile(r'\d+')
         pattern_userInfo = re.compile(
@@ -180,7 +186,7 @@ class Nga:
         s_userInfos = soup.find(
             'script', {'type': 'text/javascript'}, text=pattern_userInfo)
         userInfos = pattern_userInfo.findall(s_userInfos.string)
-        j = json.loads(userInfos[0],strict=False)
+        j = json.loads(userInfos[0], strict=False)
         for i in range(0, len(s_post_content)):
             uid = pattern_uid.search(s_uid[i]['href']).group()
             self.last_post_uid = pattern_post_content.search(
@@ -191,7 +197,8 @@ class Nga:
             up_number = pattern_up.search(s_up_number[i].string).group(1)
             post_content = self.img_post_content_processor(post_content)
             post_content = self.post_processor(post_content)
-            self.result_html =self.result_html+f'<p>{self.last_post_uid}:{username},{self.last_posttime},{uid},up:{up_number}:<br>{post_content}</p>\n'
+            self.result_html = self.result_html + \
+                f'<p>{self.last_post_uid}:{username},{self.last_posttime},{uid},up:{up_number}:<br>{post_content}</p>\n'
         logging.info(f'第{page}页解析完成')
 
     def get_title(self):
@@ -209,7 +216,7 @@ class Nga:
             pattern2 = re.compile(r',1:(\d+)')
             last_page = int(pattern2.findall(l)[0])
         except:
-            last_page=1
+            last_page = 1
         logging.info(f'标题最大页数完成,last_page:{last_page}')
         return last_page
 
@@ -258,16 +265,17 @@ class Nga:
         self.finish()
 
     def finish(self):
-        self.info = {"title":self.title,"last_page": self.last_page,
-                          'last_post': self.last_post_uid, "last_time": self.last_posttime}
+        self.info = {"title": self.title, "last_page": self.last_page,
+                     'last_post': self.last_post_uid, "last_time": self.last_posttime}
         Nga.json['ongoing_ids'][self.id] = self.info
         if self.id in Nga.json["new_ids"]:
             Nga.json["new_ids"].remove(self.id)
-        
+
     @classmethod
     def dump(cls):
-        with open('nga.json', 'w',encoding='utf-8') as w:
-            cls.json['cookies']= requests.utils.dict_from_cookiejar(cls.cookieJar)
+        with open('nga.json', 'w', encoding='utf-8') as w:
+            cls.json['cookies'] = requests.utils.dict_from_cookiejar(
+                cls.cookieJar)
             json.dump(Nga.json, w, ensure_ascii=False)
 
     def write_to_result_html(self):
@@ -277,17 +285,17 @@ class Nga:
                 f'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>{self.title}</title>\n</head>\n<body>\n')
             writer.write(self.result_html)
             writer.write('</body>\n</html>')
-    
-    @classmethod 
+
+    @classmethod
     def get_index(cls):
-        r=cls.session.get(cls.url_index)
-        content=r.text.replace('�', '')
-        with open('index.html','w') as f:
+        r = cls.session.get(cls.url_index)
+        content = r.text.replace('�', '')
+        with open('index.html', 'w') as f:
             f.write(content)
-        soup=bs(content,'lxml')
-        list=soup.find_all('a',{'class':'topic'})
+        soup = bs(content, 'lxml')
+        list = soup.find_all('a', {'class': 'topic'})
         replies_list = soup.find_all('a', {'class': 'replies'})
-        print(list[-1]['href'],list[-1].text)
+        print(list[-1]['href'], list[-1].text)
         print(replies_list[-1].text)
 
 
@@ -298,4 +306,3 @@ if __name__ == "__main__":
     Nga.start_new()
     Nga.get_index()
     Nga.dump()
-
