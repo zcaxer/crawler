@@ -1,35 +1,25 @@
-# class Nga
-'''nga class '''
-
 import time
 import re
 import os
 import traceback
+import argparse
+import asyncio
 import requests
 import json
 import logging
 from bs4 import BeautifulSoup as bs
+import aiofiles
+
+from .nga import Nga
+
+# TODO:查找回复内容原文并展示
+# TODO:ac娘
+# TODO:重构，单元化
+# TODO:update posts
+# TODO:find post I interested in
+
 
 class Nga:
-
-    class Topic:
-        id=0
-        authur=''
-        title=''
-        up=0
-        content=''
-        date=''
-
-    class Post:
-        id = 0  # 楼层
-        authur=''
-        content=''
-        quote_from = []
-        reply_from = []
-        reply_to = 0
-        quote_to=0
-        up=0
-        date=''
 
     p_img_partial = r'\[img\]\..+?\[/img\]?'
     p_img = r'\[img\].+?\[/img\]'
@@ -82,8 +72,8 @@ class Nga:
                 r = cls.session.get(cls.url_page.format(id=id, page=page))
                 soup = bs(r.text, 'lxml')
                 t = soup.title.text
-                if t == '找不到主题' or t == "帖子发布或回复时间超过限制" or t == "帖子被设为隐藏" or t == '帖子审核未通过':
-                    # or t == "帖子正等待审核":
+                if t == '找不到主题' or t == "帖子发布或回复时间超过限制" or t == "帖子被设为隐藏" or t == '帖子审核未通过' :
+                    #or t == "帖子正等待审核":
                     cls.json['finished_ids'].update({id: cls.ongoing_ids[id]})
                     cls.json['ongoing_ids'].pop(id)
                     logging.info(f'id:{id} finished')
@@ -125,6 +115,65 @@ class Nga:
                 traceback.print_exc()
                 logging.info(f'{id}请求失败')
 
+    def download_img(self, url: str, path: str, pic_name: str):
+        logging.info(f'Downloading {pic_name}')
+        if not os.path.exists(f'htmls/{path}/img'):
+            os.mkdir(f'htmls/{path}/img')
+        if os.path.exists(f'htmls/{path}/img/{pic_name}'):
+            logging.debug(f'{pic_name} already exists')
+            return
+        if url[1] == 'm':
+            url = Nga.url_img+url
+        with open(f'htmls/{path}/img/{pic_name}', 'wb') as f:
+            f.write(self.session.get(url).content)
+
+    def img_post_content_processor(self, post_content: str):
+
+        logging.info(f'Processing {self.title} img url')
+        pattern_img = re.compile(r'(.*?)\[img\]\.?(.+?)\[/img\](.*?)')
+        match_img = pattern_img.findall(post_content)
+        if not match_img:
+            return post_content
+        pattern_pic_name = re.compile(r'.*/(.*?\..*?)$')
+        post_content = ''
+        for i in match_img:
+            pic_name = pattern_pic_name.search(i[1]).group(1)
+            self.download_img(i[1], self.title, pic_name)
+            post_content += f'{i[0]}<img src="../htmls/{self.title}/img/{pic_name}">{i[2]}'
+        return post_content
+
+    def post_processor(self, original_post_content):
+        logging.info('开始处理引用和回复')
+        post_content = ''
+        pattern_quote = re.compile(
+            '\[b\]\s*Post\s*by\s*\[uid=?\d*\](.*)\[/uid\].*\(.*\):\[/b\](.*)\[\/quote\](.*)')
+        match_quote = pattern_quote.search(original_post_content)
+        if match_quote:
+            logging.debug('引用')
+            quote_uname = match_quote.groups()[0]
+            quote_content = match_quote.groups()[1]
+            reply_content = match_quote.groups()[2]
+            post_content += f'<blockquote><p>{quote_uname}:{quote_content}</p></blockquote>{reply_content}'
+            return post_content
+        pattern_reply = re.compile(
+            '\[b\]Reply to \[pid=\d+,\d+,\d+\]Reply\[/pid\] Post by \[uid=?\d*\](.*)\[/uid\] \((.*)\)\[/b\](.*)')
+        match_reply = pattern_reply.search(original_post_content)
+        if match_reply:
+            logging.debug('回复')
+            post_uname = match_reply.groups()[0]
+            post_time = match_reply.groups()[1]
+            reply_content = match_reply.groups()[2]
+            #print(post_uname, post_time)
+            pattern_post_content = re.compile(
+                f'<p>\d+:{post_uname},{post_time},\d+,up:\d+:<br>(.*)\n?</p>\s')
+            original_post_content = '未匹配到'
+            match = pattern_post_content.search(self.result_html)
+            if match:
+                original_post_content = match.group(1)
+            post_content += f'<blockquote><p>{post_uname}:{original_post_content}</p></blockquote>{reply_content}'
+            return post_content
+        return original_post_content
+
     def get_content(self, page, html=None):
         logging.debug(f'开始解析第{page}页')
         html = html or self.html_list[page-1]
@@ -162,8 +211,8 @@ class Nga:
         l1 = self.soup.find("title").text
         pattern1 = re.compile(r'(.*)\s178')
         title = pattern1.findall(l1)[0]
-        self.title = str.replace(title, r'/', '-')
-        # l2 = self.soup.find(id='pageBtnHere')
+        self.title=str.replace(title,r'/','-')
+        #l2 = self.soup.find(id='pageBtnHere')
         logging.info(f'标题解析完成,title:{self.title}')
 
     @staticmethod
@@ -254,3 +303,25 @@ class Nga:
         replies_list = soup.find_all('a', {'class': 'replies'})
         print(list[-1]['href'], list[-1].text)
         print(replies_list[-1].text)
+
+
+logging.basicConfig(level=logging.DEBUG)
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+    Nga.init()
+    parser=argparse.ArgumentParser(description="nga 爬虫")
+    parser.add_argument('-u','--update',action='store_true',help='更新爬虫库中的帖子')
+    parser.add_argument('-f','--force',action='store_true',help='强制更新该id的帖子')
+    parser.add_argument('id',metavar='ID', nargs='*',type=int)
+    args=parser.parse_args()
+
+    if args.update :
+        Nga.start_all()
+    print(args)    
+    for id in args.id:
+        nga=Nga(id)
+        nga.start()
+    #Nga.start_new()
+    Nga.get_index()
+    Nga.dump()

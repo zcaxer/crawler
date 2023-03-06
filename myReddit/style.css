@@ -1,0 +1,23 @@
+div.firstContainer{
+    margin: 120px auto;
+    background-color: aquamarine;
+    position: relative;
+    justify-content: center;
+    width: calc(100%-160px);
+}
+div.scrollContainer{
+    width: calc(100%-160px);
+    max-width: 1280px;
+}
+div.contentContainer{
+    width: 100%;
+    max-width: 740px;
+    background-color: bisque;
+    float: left;
+}
+
+div.sideBar{
+    width: 312px;
+    background-color: coral;
+    float: right;
+}
