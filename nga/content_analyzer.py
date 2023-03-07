@@ -8,7 +8,6 @@ import os
 from .nga import Nga
 
 def download_img(nga:Nga, url: str, path: str, pic_name: str):
-    
     logging.info('Downloading %s ',pic_name)
     if not os.path.exists(f'htmls/{path}/img'):
         os.mkdir(f'htmls/{path}/img')
