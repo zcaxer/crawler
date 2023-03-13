@@ -10,7 +10,7 @@ import logging
 from bs4 import BeautifulSoup as bs
 import aiofiles
 
-from .nga import Nga
+from nga import Nga
 
 # TODO:查找回复内容原文并展示
 # TODO:ac娘
@@ -19,14 +19,7 @@ from .nga import Nga
 # TODO:find post I interested in
 
 
-class Nga:
-
-    p_img_partial = r'\[img\]\..+?\[/img\]?'
-    p_img = r'\[img\].+?\[/img\]'
-    url_img = r'https://img.nga.178.com/attachments'
-    url_first_page = "https://nga.178.com/read.php?tid={id}"
-    url_page = "https://nga.178.com/read.php?tid={id}&page={page}"
-    url_index = "https://nga.178.com/thread.php?fid=-7"
+class Nga_clawler:
 
     def __init__(self, id):
         self.html_list = []

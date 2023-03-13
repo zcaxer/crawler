@@ -2,10 +2,13 @@
 .vscode/
 */__pycache__
 
-*.json
+nga.json
+auth.json
+config.json
 nga/htmls/
 nga/results/
 nga/*.html
 
+!nga.json.sample
 qlchat/main_index.html
 qlchat/main_full.html
