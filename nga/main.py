@@ -10,7 +10,7 @@ import logging
 from bs4 import BeautifulSoup as bs
 import aiofiles
 
-from nga import Nga
+from .nga import Nga
 
 # TODO:查找回复内容原文并展示
 # TODO:ac娘
@@ -48,9 +48,9 @@ class Nga_clawler:
                 id = cls.json['new_ids'][0]
             except:
                 break
-            nga = Nga(id)
+            nga_clawler = Nga_clawler(id)
             try:
-                nga.start()
+                nga_clawler.start()
             except:
                 logging.debug(f'请求{id}失败')
                 cls.json['new_ids'].remove(id)
@@ -62,7 +62,7 @@ class Nga_clawler:
             try:
                 page = cls.ongoing_ids[id]['last_page']
                 time.sleep(1)
-                r = cls.session.get(cls.url_page.format(id=id, page=page))
+                r = cls.session.get(Nga.url_page.format(id=id, page=page))
                 soup = bs(r.text, 'lxml')
                 t = soup.title.text
                 if t == '找不到主题' or t == "帖子发布或回复时间超过限制" or t == "帖子被设为隐藏" or t == '帖子审核未通过' :
@@ -74,19 +74,19 @@ class Nga_clawler:
                     s_posttime = soup.find_all('div', {'class': 'postInfo'})
                     last_posttime = s_posttime[-1].text
                     if last_posttime != cls.ongoing_ids[id]['last_time']:
-                        max_page = Nga.get_max_page(soup)
-                        nga = Nga(id)
-                        nga.title = cls.ongoing_ids[id]['title']
+                        max_page = Nga_clawler.get_max_page(soup)
+                        nga_clawler = Nga_clawler(id)
+                        nga_clawler.title = cls.ongoing_ids[id]['title']
                         for p in range(page, max_page+1):
-                            html = nga.get_page(p, True)
-                            with open(f'htmls/{nga.title}/{nga.title}{p}.html', 'w', encoding="gbk") as f:
+                            html = nga_clawler.get_page(p, True)
+                            with open(f'htmls/{nga_clawler.title}/{nga_clawler.title}{p}.html', 'w', encoding="gbk") as f:
                                 f.write(html)
-                                logging.info(f'写入{nga.title}{p}.html')
-                            nga.get_content(p, html)
+                                logging.info(f'写入{nga_clawler.title}{p}.html')
+                            nga_clawler.get_content(p, html)
 
-                        with open(f'results/{nga.title}.html', "r", encoding='utf-8') as r:
+                        with open(f'results/{nga_clawler.title}.html', "r", encoding='utf-8') as r:
                             old_lines = r.readlines()[7:-2]
-                            new_lines = nga.result_html.splitlines()
+                            new_lines = nga_clawler.result_html.splitlines()
                             pattern = re.compile(
                                 '\s*\<\s*p\s*\>\s*(\d+)\s*:.*\<\s*/p\s*\>\s*')
                             while True:
@@ -95,15 +95,15 @@ class Nga_clawler:
                                     new_lines.pop(0)
                                 else:
                                     break
-                            nga.result_html = ''
+                            nga_clawler.result_html = ''
                             for line in old_lines:
-                                nga.result_html = nga.result_html+line
+                                nga_clawler.result_html = nga_clawler.result_html+line
                             for line in new_lines:
-                                nga.result_html = nga.result_html+line+'\n'
-                        nga.last_page = max_page
-                        nga.write_to_result_html()
-                        nga.finish()
-                Nga.dump()
+                                nga_clawler.result_html = nga_clawler.result_html+line+'\n'
+                        nga_clawler.last_page = max_page
+                        nga_clawler.write_to_result_html()
+                        nga_clawler.finish()
+                Nga_clawler.dump()
             except Exception as e:
                 traceback.print_exc()
                 logging.info(f'{id}请求失败')
@@ -222,7 +222,7 @@ class Nga_clawler:
     def get_page(self, page: int, refresh_old_html=False):
         if page == 1:
             time.sleep(2)
-            r = self.session.get(self.url_first_page.format(id=self.id))
+            r = self.session.get(Nga.url_first_page.format(id=self.id))
             if r.status_code == 403:
                 logging.warning(f'第{page}页请求失败')
                 return
@@ -231,7 +231,7 @@ class Nga_clawler:
                 return f.read()
         else:
             time.sleep(2)
-            r = self.session.get(self.url_page.format(id=self.id, page=page))
+            r = self.session.get(Nga.url_page.format(id=self.id, page=page))
             if r.status_code == 403:
                 logging.warning(f'第{page}页请求失败')
                 return
@@ -266,16 +266,16 @@ class Nga_clawler:
     def finish(self):
         self.info = {"title": self.title, "last_page": self.last_page,
                      'last_post': self.last_post_uid, "last_time": self.last_posttime}
-        Nga.json['ongoing_ids'][self.id] = self.info
-        if self.id in Nga.json["new_ids"]:
-            Nga.json["new_ids"].remove(self.id)
+        Nga_clawler.json['ongoing_ids'][self.id] = self.info
+        if self.id in Nga_clawler.json["new_ids"]:
+            Nga_clawler.json["new_ids"].remove(self.id)
 
     @classmethod
     def dump(cls):
         with open('nga.json', 'w', encoding='utf-8') as w:
             cls.json['cookies'] = requests.utils.dict_from_cookiejar(
                 cls.cookieJar)
-            json.dump(Nga.json, w, ensure_ascii=False)
+            json.dump(Nga_clawler.json, w, ensure_ascii=False)
 
     def write_to_result_html(self):
         logging.info(f'开始写入{self.title}.html')
@@ -287,7 +287,7 @@ class Nga_clawler:
 
     @classmethod
     def get_index(cls):
-        r = cls.session.get(cls.url_index)
+        r = cls.session.get(Nga.url_index)
         content = r.text.replace('�', '')
         with open('index.html', 'w') as f:
             f.write(content)
@@ -313,8 +313,8 @@ if __name__ == "__main__":
         Nga.start_all()
     print(args)    
     for id in args.id:
-        nga=Nga(id)
-        nga.start()
+        nga_clawler=Nga_clawler(id)
+        nga_clawler.start()
     #Nga.start_new()
     Nga.get_index()
     Nga.dump()

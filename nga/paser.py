@@ -4,7 +4,7 @@
 
 import logging
 import re
-from .nga import Nga
+from .fetcher import download_img
 
 class_list = ['ac', 'a2', 'ng', 'pst', 'dt', 'pg']
 l = [["smile", "mrgreen", "question", "wink", "redface", "sad", "crazy", "cool",
@@ -62,7 +62,7 @@ def emoji_paser(content):
     return content
 
 
-def img_post_content_parser(nga: Nga, post_content: str):
+def img_parser(session,title, post_content: str):
     # logging.info(f'Processing {self.title} img url')
     # logging.info(f'Processing {self.title} img url')
     pattern_img = re.compile(r'(.*?)\[img\]\.?(.+?)\[/img\](.*?)')
@@ -73,12 +73,12 @@ def img_post_content_parser(nga: Nga, post_content: str):
     post_content = ''
     for i in match_img:
         pic_name = pattern_pic_name.search(i[1]).group(1)
-        download_img(nga, i[1], nga.title, pic_name)
-        post_content += f'{i[0]}<img src="../htmls/{nga.title}/img/{pic_name}">{i[2]}'
+        download_img(session, i[1], title, pic_name)
+        post_content += f'{i[0]}<img src="../htmls/{title}/img/{pic_name}">{i[2]}'
     return post_content
 
 
-def post_paser(nga: Nga, original_post_content):
+def reply_paser(original_post_content):
     logging.info('开始处理引用和回复')
     post_content = ''
     pattern_quote = re.compile(
@@ -109,8 +109,3 @@ def post_paser(nga: Nga, original_post_content):
         post_content += f'<blockquote><p>{post_uname}:{original_post_content}</p></blockquote>{reply_content}'
         return post_content
     return original_post_content
-
-
-if __name__=="__main__":
-    s= 'dasdasdasd[s:0:1][s:0:2][s:0:3][s:0:4][s:0:5][s:0:6][s:0:8][s:a2:那个…]asdasd[s:ng:害怕]tgrete[s:pst:偷笑3]yigf[s:dt:发光][s:pg:拒绝]'
-    print(emoji_paser(s))
