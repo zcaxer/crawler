@@ -2,7 +2,17 @@ import os
 import json
 import logging
 import requests
-from .nga import Nga
+from nga_class import Nga
+
+
+def get_session():
+    with open('nga.json', 'r', encoding='utf-8') as f:
+        config_json = json.load(f)
+        cookie_jar = requests.utils.cookiejar_from_dict(
+            config_json['cookies'])
+        session = requests.Session()
+        session.cookies = cls.cookie_jar
+        return session
 
 
 def download_img(session,url: str, path: str, pic_name: str):

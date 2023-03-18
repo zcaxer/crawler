@@ -7,8 +7,12 @@ import traceback
 #import pymongo
 import motor.motor_asyncio
 
+def get_client():
 #client=motor.MotorClient.open_sync()
-client=motor.motor_asyncio.AsyncIOMotorClient()
+    client=motor.motor_asyncio.AsyncIOMotorClient()
+    return client
+
+client=get_client()
 db_replies=client.nga_replies
 
 async def get_server_info():
@@ -19,7 +23,7 @@ async def get_server_info():
         print('connect failed')
 
 async def write_to_db(bson):
-    db.nga_replies.insertOne(bson)
+    db_replies.insertOne(bson)
 
 if __name__=='__main__':
 
