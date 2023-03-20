@@ -22,8 +22,9 @@ async def get_server_info():
         traceback.print_exc()
         print('connect failed')
 
-async def write_to_db(bson):
-    db_replies.insertOne(bson)
+async def write_to_db(json_data):
+    bson_data=motor
+    db_replies.insert_one(bson_data)
 
 if __name__=='__main__':
 
