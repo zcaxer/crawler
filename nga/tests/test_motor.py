@@ -17,8 +17,7 @@ def get_json():
 
 async def add_cookie():
     cookie=get_json()['cookies']
-    
-    client=mongo.client
+    client=mongo.async_client
     client.nga.info.insert_one({'cookies':cookie})
 
 
@@ -26,5 +25,6 @@ async def add_cookie():
 
 if __name__ == '__main__':
     mongo=Mongo()
-    cookies = asyncio.run(mongo.read_cookies())
+  #  cookies = asyncio.run(mongo.read_cookies())
+    cookies=mongo.read_cookies()
     print(cookies)

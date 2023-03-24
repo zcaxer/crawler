@@ -2,6 +2,8 @@
 '''
 import os
 import logging
+import time
+import asyncio
 import aiohttp
 
 from .nga import Nga
@@ -11,16 +13,11 @@ class Request:
 
     def __init__(self):
         self.mongo=Mongo()
-        self.session = self.get_session()
+        self.cookies=self.mongo.read_cookies()
+        self.session=aiohttp.ClientSession(cookies=self.cookies)
+        
 
-    async def get_session(self):
-        with open('nga.json', 'r', encoding='utf-8') as f:
-            cookies=await self.mongo.read_cookie()
-            session = aiohttp.ClientSession(cookies=cookies)  
-            return session
-
-    @classmethod
-    def download_img(cls,url: str, path: str, pic_name: str):
+    async def download_img(self,url: str, path: str, pic_name: str):
         logging.info('Downloading %s ', pic_name)
         if not os.path.exists(f'htmls/{path}/img'):
             os.mkdir(f'htmls/{path}/img')
@@ -29,14 +26,18 @@ class Request:
             return
         if url[1] == 'm':
             url = Nga.url_img+url
-        with open(f'htmls/{path}/img/{pic_name}', 'wb') as f:
-            f.write(cls.session.get(url).content)
+        async with self.session.get(url) as resp:
+            with open(f'htmls/{path}/img/{pic_name}', 'wb') as f:
+                while True:
+                    chunk=await resp.content.read(1024)
+                    if not chunk:break
+                    f.write(chunk)
 
 
-    def get_page(self, page: int, refresh_old_html=False):
+    def get_page(self, topic_id,page: int, refresh_old_html=False):
         if page == 1:
             time.sleep(2)
-            r = session.get(Nga.url_first_page.format(id=self.id))
+            r = session.get(Nga.url_first_page.format(id=topic_id))
             if r.status_code == 403:
                 logging.warning(f'第{page}页请求失败')
                 return
