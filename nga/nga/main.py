@@ -4,22 +4,25 @@ import os
 import traceback
 import argparse
 import asyncio
-import requests
 import json
 import logging
+import requests
 from bs4 import BeautifulSoup as bs
 import aiofiles
 
+from .request import Request
+from .mongo import Mongo
 from .nga import Nga
 
 # TODO:查找回复内容原文并展示
-# TODO:ac娘
 # TODO:重构，单元化
 # TODO:update posts
 # TODO:find post I interested in
 
 
 class Nga_clawler:
+    request=Request()
+    mongo=Mongo()
 
     def __init__(self, id):
         self.html_list = []
@@ -219,23 +222,7 @@ class Nga_clawler:
         logging.info(f'标题最大页数完成,last_page:{last_page}')
         return last_page
 
-    def get_page(self, page: int, refresh_old_html=False):
-        if page == 1:
-            time.sleep(2)
-            r = self.session.get(Nga.url_first_page.format(id=self.id))
-            if r.status_code == 403:
-                logging.warning(f'第{page}页请求失败')
-                return
-        elif refresh_old_html == False and os.path.exists(f'htmls/{self.title}/{self.title}{page}.html'):
-            with open(f'htmls/{self.title}/{self.title}{page}.html', 'r', encoding='gbk') as f:
-                return f.read()
-        else:
-            time.sleep(2)
-            r = self.session.get(Nga.url_page.format(id=self.id, page=page))
-            if r.status_code == 403:
-                logging.warning(f'第{page}页请求失败')
-                return
-        return r.text.replace('�', '')
+    
 
     def start(self, refresh_old_html=False):
         page1 = self.get_page(1, refresh_old_html)
@@ -302,7 +289,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    Nga.init()
     parser=argparse.ArgumentParser(description="nga 爬虫")
     parser.add_argument('-u','--update',action='store_true',help='更新爬虫库中的帖子')
     parser.add_argument('-f','--force',action='store_true',help='强制更新该id的帖子')
@@ -310,11 +296,11 @@ if __name__ == "__main__":
     args=parser.parse_args()
 
     if args.update :
-        Nga.start_all()
+        Nga_clawler.start_all()
     print(args)    
     for id in args.id:
         nga_clawler=Nga_clawler(id)
         nga_clawler.start()
     #Nga.start_new()
-    Nga.get_index()
-    Nga.dump()
+    Nga_clawler.get_index()
+    Nga_clawler.dump()

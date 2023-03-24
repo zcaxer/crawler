@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..")
-from nga.async_mongo import get_client
+from nga.mongo import Mongo
 import json
 import asyncio
 
@@ -18,11 +18,13 @@ def get_json():
 async def add_cookie():
     cookie=get_json()['cookies']
     
-    client=get_client()
+    client=mongo.client
     client.nga.info.insert_one({'cookies':cookie})
 
 
-if __name__ == '__main__':
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(add_cookie())
+
+if __name__ == '__main__':
+    mongo=Mongo()
+    cookies = asyncio.run(mongo.read_cookies())
+    print(cookies)
