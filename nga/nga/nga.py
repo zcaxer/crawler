@@ -1,5 +1,7 @@
 # class Nga
 '''nga class '''
+
+
 class Nga:
 
     p_img_partial = r'\[img\]\..+?\[/img\]?'
@@ -8,43 +10,52 @@ class Nga:
     url_first_page = "https://nga.178.com/read.php?tid={id}"
     url_page = "https://nga.178.com/read.php?tid={id}&page={page}"
     url_index = "https://nga.178.com/thread.php?fid=-7"
-    class Section:
-        url=''
-    class Topic:
-        id=0
-        authur=''
-        title=''
-        up=0
-        content=''
-        post_date=''
-        last_post_date=''
-        post_count=0
-        page_count=0
 
-        def __init__(self,html=None):
-            pass
-    class Post:
-        id = 0  # 楼层
-        authur=''
-        content=''
-        quote_from = []
-        reply_from = []
-        reply_to = 0
-        quote_to=0
-        up=0
-        date=''
-        reply_by=[]
-        quote_by=[] 
 
-    class User:
-        id=0
-        name=''
-        post_number=0
-        topic_number=0
+class Section:
+    url = ''
 
-    def __init__(self, id):
+
+class Topic:
+    ''' topic class 
+    帖子内容在posts[0]'''
+
+    def __init__(self, topic_id):
+        self.id = topic_id
+        self.title = ''
+        self.last_post_date = ''
+        self.post_count = 0
+        self.page_count = 0
+        self.posts=[]
+
+class Post:
+    def __init__(self, reply_id, author, post_date, content, up_counts, reply_to=None, quote_to=None):
+        self.reply_id = reply_id  # 楼层
+        self.author = author
+        self.date = post_date
+        self.content = content
+        if reply_to is None:
+            self.quote_to = []
+        else:
+            self.quote_to = quote_to
+        if quote_to is None:
+            self.reply_to = []
+        else:
+            self.quote_to = quote_to
+        self.up_counts = up_counts
+        self.reply_by = []
+        self.quote_by = []
+
+
+class User:
+    uid = 0
+    name = ''
+    post_number = 0
+    topic_number = 0
+
+    def __init__(self, uid):
         self.html_list = []
-        self.id = id
+        self.uid = uid
         self.last_post_uid = ''
         self.last_posttime = ''
         self.last_page = ''
