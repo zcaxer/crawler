@@ -28,6 +28,17 @@ class Topic:
         self.page_count = 0
         self.posts=[]
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'last_post_date': self.last_post_date,
+            'post_count': self.post_count,
+            'page_count': self.page_count,
+            'posts': [post.to_dict() for post in self.posts]
+        }
+
+
 class Post:
     def __init__(self, reply_id, author, post_date, content, up_counts, reply_to=None, quote_to=None):
         self.reply_id = reply_id  # 楼层
@@ -45,6 +56,20 @@ class Post:
         self.up_counts = up_counts
         self.reply_by = []
         self.quote_by = []
+
+    def to_dict(self):
+        return {
+            'reply_id': self.reply_id,
+            'author': self.author,
+            'date': self.date,
+            'content': self.content,
+            'quote_to': self.quote_to,
+            'reply_to': self.reply_to,
+            'up_counts': self.up_counts,
+            'reply_by': self.reply_by,
+            'quote_by': self.quote_by
+        }
+
 
 
 class User:

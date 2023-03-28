@@ -1,30 +1,34 @@
-import sys
-sys.path.append("..")
-from nga.mongo import Mongo
-import json
-import asyncio
+# Nga_pymongo module
 
-#import nga.async_mongo as am
-#from nga.request_handler import get_session
+"""connect mongodb with motor and pymongo"""
 
-#am.get_client()
+#import asyncio
+from typing import Optional
+import motor.motor_asyncio
+import pymongo
 
+class Mongo:
+    _instance: Optional[Mongo] = None
+    async_client: Optional[motor.motor_asyncio.AsyncIOMotorClient] = None
+    sync_client: Optional[pymongo.MongoClient] = None
 
-def get_json():
-    with open('../nga/nga.json', 'r', encoding='utf-8') as f:
-        config_json = json.load(f)
-        return config_json
-
-async def add_cookie():
-    cookie=get_json()['cookies']
-    client=mongo.async_client
-    client.nga.info.insert_one({'cookies':cookie})
-
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls.async_client = motor.motor_asyncio.AsyncIOMotorClient()
+            cls.sync_client = pymongo.MongoClient(host='localhost', port=27017)
+        return cls._instance
 
 
 
-if __name__ == '__main__':
-    mongo=Mongo()
-  #  cookies = asyncio.run(mongo.read_cookies())
-    cookies=mongo.read_cookies()
-    print(cookies)
+    async def write_to_db(self,json_data):
+        bson_data=json_data
+        await self.async_client.replies.insert_one(bson_data)
+
+    async def write_cookies_to_db(self,cookies):
+        await self.async_client.nga.info.insert_one({'cookies':cookies})
+
+    def read_cookies(self):
+        
+        cookie=self.sync_client.nga.info.find_one({'cookies':{'$exists':True}})
+        return cookie['cookies']
