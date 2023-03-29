@@ -29,7 +29,7 @@ class Topic_clawler:
             self.request=Request()
         if self.mongo is None:
             self.mongo=Mongo()
-        self.topic_id=topic_id
+        self.topic=Topic(topic_id)
 
     @classmethod
     def init(cls):
@@ -80,7 +80,7 @@ class Topic_clawler:
                         nga_clawler = Topic_clawler(id)
                         nga_clawler.title = cls.ongoing_ids[id]['title']
                         for p in range(page, max_page+1):
-                            html = nga_clawler.get_page(self., True)
+                            html =self.request.get_page(id, p)
                             with open(f'htmls/{nga_clawler.title}/{nga_clawler.title}{p}.html', 'w', encoding="gbk") as f:
                                 f.write(html)
                                 logging.info(f'写入{nga_clawler.title}{p}.html')
@@ -111,20 +111,19 @@ class Topic_clawler:
                 logging.info(f'{id}请求失败')    
 
     async def start(self, topic_id,refresh_old_html=False):
-        topic=Topic(topic_id)
-        page1 =await self.request.get_page(self.topic_id, 1)
+        page1 =await self.request.get_page(self.topic.id, 1)
         soup = bs(page1, 'lxml')
-        topic.title=await parser.get_title(soup)
+        self.topic.title=await parser.get_title(soup)
         page_count =await parser.get_page_count(soup)
-        if not os.path.exists(self.title):
-            logging.info(f'创建文件夹{self.title}')
+        if not os.path.exists(self.topic.title):
+            logging.info('创建文件夹%s',self.topic.title)
             os.mkdir(f'htmls/{self.title}')
-        with open(f'htmls/{self.title}/{self.title}1.html', 'w', encoding="gbk") as f:
+        with open(f'htmls/{self.topic.title}/{self.title}1.html', 'w', encoding="gbk") as f:
             f.write(page1)
-            logging.info('写入%s1.html',self.title)
+            logging.info('写入%s1.html',self.topic.title)
         logging.info('开始解析%s第1页',self.title)
-        post_list = await parser.page_parser(soup, 1, title=topic.title)
-        topic.posts.extend(post_list)
+        post_list = await parser.page_parser(soup, 1, title=self.topic.title)
+        self.topic.posts.extend(post_list)
         for i in range(2, page_count+1):
             logging.info(f'开始请求{self.title}{i}.html')
             html = self.request.get_page(self.topic_id,i, refresh_old_html)
@@ -135,7 +134,8 @@ class Topic_clawler:
             soup=bs(html, 'lxml')
             post_list=parser.page_parser(soup, i)
             topic.posts.extend(post_list)
-        self.write_to_result_html()
+        topic.write_to_result_html()
+        await self.mongo.write_posts_to_db(topic)
         self.finish()
 
     def finish(self):
@@ -152,13 +152,6 @@ class Topic_clawler:
                 cls.cookieJar)
             json.dump(Topic_clawler.json, w, ensure_ascii=False)
 
-    def write_to_result_html(self):
-        logging.info(f'开始写入{self.title}.html')
-        with open(f'results/{self.title}.html', "w", encoding='utf-8') as writer:
-            writer.write(
-                f'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>{self.title}</title>\n</head>\n<body>\n')
-            writer.write(self.result_html)
-            writer.write('</body>\n</html>')
 
     @classmethod
     def get_index(cls):

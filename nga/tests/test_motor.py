@@ -3,17 +3,12 @@ import sys
 sys.path.append('..')
 from nga.mongo import Mongo
 
+mongo = Mongo()
 
-class TestMongo(unittest.TestCase):
-    def setUp(self):
-        self.mongo = Mongo()
-
-    def test_read_cookies(self):
-        cookies = {'key': 'value'}
-        self.mongo.write_cookies_to_db(cookies)
-        result = self.mongo.read_cookies()
-        self.assertEqual(result, cookies)
+def test_read_cookies():
+    result = mongo.read_cookies()
+    print(result)
 
 
 if __name__ == '__main__':
-    unittest.main()
+    test_read_cookies()

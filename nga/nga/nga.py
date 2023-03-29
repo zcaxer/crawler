@@ -1,5 +1,6 @@
 # class Nga
 '''nga class '''
+import logging
 
 
 class Nga:
@@ -27,6 +28,15 @@ class Topic:
         self.post_count = 0
         self.page_count = 0
         self.posts=[]
+        self.result_html=''
+
+    def write_to_result_html(self):
+        logging.info('开始写入%s.html', self.title)
+        with open(f'results/{self.title}.html', "w", encoding='utf-8') as writer:
+            writer.write(
+                f'<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>{self.title}</title>\n</head>\n<body>\n')
+            writer.write(self.result_html)
+            writer.write('</body>\n</html>')
 
     def to_dict(self):
         return {
@@ -40,22 +50,20 @@ class Topic:
 
 
 class Post:
-    def __init__(self, reply_id, author, post_date, content, up_counts, reply_to=None, quote_to=None):
-        self.reply_id = reply_id  # 楼层
-        self.author = author
-        self.date = post_date
-        self.content = content
-        if reply_to is None:
-            self.quote_to = []
-        else:
-            self.quote_to = quote_to
-        if quote_to is None:
-            self.reply_to = []
-        else:
-            self.quote_to = quote_to
-        self.up_counts = up_counts
+    def __init__(self, id):
+        self.id = id  # 楼层
+        self.author_uid = None
+        self.author_name=None
+        self.date = None
+        self.content = None
+        self.quote_to = []
+        self.quote_to = None
+        self.reply_to = []
+        self.quote_to = None
+        self.up_counts = None
         self.reply_by = []
         self.quote_by = []
+
 
     def to_dict(self):
         return {
@@ -69,8 +77,6 @@ class Post:
             'reply_by': self.reply_by,
             'quote_by': self.quote_by
         }
-
-
 
 class User:
     uid = 0

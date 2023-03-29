@@ -6,7 +6,7 @@ import logging
 import re
 import json
 from .request import Request
-from .nga import Post
+from .nga import Post,Topic
 
 emoji_class_list = ['ac', 'a2', 'ng', 'pst', 'dt', 'pg']
 emoji_list = [["smile", "mrgreen", "question", "wink", "redface", "sad", "crazy", "cool",
@@ -134,10 +134,10 @@ async def get_page_count(soup):
     return last_page
 
 
-async def page_parser(soup, page,title=''):
+async def page_parser(soup, page,topic:Topic):
     logging.debug('开始解析第%d页', page)
-    if title is None:
-        title=get_title(soup)
+    if topic.title is None:
+        topic.title=get_title(soup)
     pattern_author_uid = re.compile(r'\d+')
     pattern_user_info = re.compile(
         r'commonui\.userInfo\.setAll\(\s+(.*)\)')
@@ -154,11 +154,11 @@ async def page_parser(soup, page,title=''):
     user_info_json = json.loads(user_infos[0], strict=False)
     result_html = ''
     anonymous_count = 0
-    reply_list=[]
     for i, str_post_content in enumerate(str_post_contents):
-        author_uid = pattern_author_uid.search(
+        post=Post(i)
+        post.author_uid = pattern_author_uid.search(
             str_author_uid[i]['href']).group()
-        post_id = pattern_post_content.search(
+        post.id = pattern_post_content.search(
             str_post_content.get('id')).group(1)
         if author_uid in user_info_json :
             username = user_info_json[author_uid]['username']
@@ -169,11 +169,10 @@ async def page_parser(soup, page,title=''):
         post_content = str_post_content.text
         up_counts = pattern_up_counts.search(str_up_counts[i].string).group(1)
 
-        post_content = img_parser(title,post_content)
+        post_content = img_parser(topic.title,post_content)
         post_content = reply_parser(post_content)
         result_html = result_html + \
-            f'<p>{post_id}:{username},{post_date},{author_uid},up:{up_counts}:<br>{post_content}</p>\n'
-        post=Post(post_id,author_uid,post_date,post_content,up_counts)
-        reply_list.append(post)
-    return reply_list
+            f'<p>{post.id}:{username},{post_date},{author_uid},up:{up_counts}:<br>{post_content}</p>\n'
+        topic.posts.append(post)
+    return result_html
     logging.info('第%d页解析完成',page)
