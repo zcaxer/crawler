@@ -20,9 +20,11 @@ class Mongo:
             cls.sync_client = pymongo.MongoClient(host='localhost', port=27017)
         return cls._instance
 
-    async def write_to_db(self, json_data):
-        bson_data = json_data
-        await self.async_client.replies.insert_one(bson_data)
+    async def write_posts_to_db(self,topic):
+        client=self.async_client['nga_topic'][topic.title]
+        for i in topic.posts:
+            bson_data = i.to_dict()
+            await client.insert_one(bson_data)
 
     async def write_cookies_to_db(self, cookies):
         await self.async_client.nga.info.insert_one({'cookies': cookies})
