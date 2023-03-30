@@ -80,37 +80,37 @@ async def img_parser(topic_title, post_content: str):
     return post_content
 
 
-async def reply_parser(original_post_content):
+async def reply_parser(post):
     logging.info('开始处理引用和回复')
-    post_content = ''
+    post_html = ''
     pattern_quote = re.compile(
         r'\[b\]\s*Post\s*by\s*\[uid=?\d*\](.*)\[/uid\].*\(.*\):\[/b\](.*)\[\/quote\](.*)')
-    match_quote = pattern_quote.search(original_post_content)
+    match_quote = pattern_quote.search(post.content)
     if match_quote:
         logging.debug('引用')
         quote_uname = match_quote.groups()[0]
         quote_content = match_quote.groups()[1]
-        reply_content = match_quote.groups()[2]
-        post_content += f'<blockquote><p>{quote_uname}:{quote_content}</p></blockquote>{reply_content}'
-        return post_content
+        post.content = match_quote.groups()[2]
+        post_html += f'<blockquote><p>{quote_uname}:{quote_content}</p></blockquote>{post.content}'
+        return post_html
     pattern_reply = re.compile(
         r'\[b\]Reply to \[pid=\d+,\d+,\d+\]Reply\[/pid\] Post by \[uid=?\d*\](.*)\[/uid\] \((.*)\)\[/b\](.*)')
-    match_reply = pattern_reply.search(original_post_content)
+    match_reply = pattern_reply.search(post.content)
     if match_reply:
         logging.debug('回复')
         post_uname = match_reply.groups()[0]
         post_time = match_reply.groups()[1]
-        reply_content = match_reply.groups()[2]
+        post.content = match_reply.groups()[2]
         # print(post_uname, post_time)
         pattern_post_content = re.compile(
             rf'<p>\d+:{post_uname},{post_time},\d+,up:\d+:<br>(.*)\n?</p>\s')
-        original_post_content = '未匹配到'
+        replyed_post_content = '未匹配到'
         match = pattern_post_content.search(nga.result_html)
         if match:
-            original_post_content = match.group(1)
-        post_content += f'<blockquote><p>{post_uname}:{original_post_content}</p></blockquote>{reply_content}'
-        return post_content
-    return original_post_content
+            replyed_post_content = match.group(1)
+        post_html += f'<blockquote><p>{post_uname}:{replyed_post_content}</p></blockquote>{post.content}'
+        return post_html
+    return post_html
 
 
 async def get_title(soup):
@@ -156,23 +156,23 @@ async def page_parser(soup, page,topic:Topic):
     anonymous_count = 0
     for i, str_post_content in enumerate(str_post_contents):
         post=Post(i)
-        post.author_uid = pattern_author_uid.search(
+        post.author_id = pattern_author_uid.search(
             str_author_uid[i]['href']).group()
         post.id = pattern_post_content.search(
             str_post_content.get('id')).group(1)
-        if author_uid in user_info_json :
-            username = user_info_json[author_uid]['username']
+        if post.author_id in user_info_json :
+            post.author_name = user_info_json[post.author_id]['username']
         else:
             anonymous_count += 1
-            username= f'匿名{anonymous_count}'#同一个匿名用户可多次发言，须加以区分
-        post_date = str_post_date[i].text
-        post_content = str_post_content.text
-        up_counts = pattern_up_counts.search(str_up_counts[i].string).group(1)
+            post.author_name= f'匿名{anonymous_count}'#同一个匿名用户可多次发言，须加以区分
+        post.date = str_post_date[i].text
+        post.content = str_post_content.text
+        post.up_counts = pattern_up_counts.search(str_up_counts[i].string).group(1)
 
-        post_content = img_parser(topic.title,post_content)
-        post_content = reply_parser(post_content)
+        post.content = img_parser(topic.title,post.content)
+        post.content = reply_parser(post)
         result_html = result_html + \
-            f'<p>{post.id}:{username},{post_date},{author_uid},up:{up_counts}:<br>{post_content}</p>\n'
+            f'<p>{post.id}:{post.author_name},{post.date},{post.author_id},up:{post.up_counts}:<br>{post.content}</p>\n'
         topic.posts.append(post)
-    return result_html
     logging.info('第%d页解析完成',page)
+    return result_html

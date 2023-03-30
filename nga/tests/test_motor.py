@@ -1,4 +1,3 @@
-import unittest
 import sys
 sys.path.append('..')
 from nga.mongo import Mongo

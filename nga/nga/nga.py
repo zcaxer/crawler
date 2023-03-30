@@ -29,6 +29,8 @@ class Topic:
         self.page_count = 0
         self.posts=[]
         self.result_html=''
+        self.soup=None
+        self.html=''
 
     def write_to_result_html(self):
         logging.info('开始写入%s.html', self.title)
@@ -45,30 +47,28 @@ class Topic:
             'last_post_date': self.last_post_date,
             'post_count': self.post_count,
             'page_count': self.page_count,
-            'posts': [post.to_dict() for post in self.posts]
         }
 
 
 class Post:
     def __init__(self, id):
         self.id = id  # 楼层
-        self.author_uid = None
-        self.author_name=None
+        self.author_id = 0
+        self.author_name=''
         self.date = None
         self.content = None
         self.quote_to = []
-        self.quote_to = None
         self.reply_to = []
-        self.quote_to = None
-        self.up_counts = None
+        self.up_counts = 0
         self.reply_by = []
         self.quote_by = []
 
 
     def to_dict(self):
         return {
-            'reply_id': self.reply_id,
-            'author': self.author,
+            'id': self.id,
+            'author_id': self.author_id,
+            'author_name': self.author_name,
             'date': self.date,
             'content': self.content,
             'quote_to': self.quote_to,
