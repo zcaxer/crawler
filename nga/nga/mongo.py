@@ -9,7 +9,7 @@ import pymongo
 
 
 class Mongo:
-    _instance=None
+    _instance = None
     async_client: Optional[motor.motor_asyncio.AsyncIOMotorClient] = None
     sync_client: Optional[pymongo.MongoClient] = None
 
@@ -20,17 +20,25 @@ class Mongo:
             cls.sync_client = pymongo.MongoClient(host='localhost', port=27017)
         return cls._instance
 
-    async def write_posts_to_db(self,topic):
-        client=self.async_client['nga_topic'][topic.title]
+    async def store_topic(self, topic):
+        if self.async_client is not None:
+            client = self.async_client['nga_topic'][topic.title]
         for i in topic.posts:
             bson_data = i.to_dict()
             await client.insert_one(bson_data)
+        await self.async_client.nga.topics.insert_one(topic.to_dict())
 
-    async def write_cookies_to_db(self, cookies):
-        await self.async_client.nga.info.insert_one({'cookies': cookies})
+    async def store_cookies(self, cookies):
+        self.sync_client.nga.info.insert_one({'cookies': cookies})
 
     def read_cookies(self):
-
         cookie = self.sync_client.nga.info.find_one(
             {'cookies': {'$exists': True}})
         return cookie['cookies']
+
+    async def search_posts_by_author_and_date(self, topic_title, author_id, date):
+        if self.async_client is not None:
+            client = self.async_client['nga_topic'][topic_title]
+        query = {"author_id": author_id, "date": date}
+        result = await client.find_one(query)
+        return result['id']

@@ -5,8 +5,12 @@
 import logging
 import re
 import json
+from datetime import datetime
 from .request import Request
 from .nga import Post,Topic
+from .mongo import Mongo
+
+mongo=Mongo()
 
 emoji_class_list = ['ac', 'a2', 'ng', 'pst', 'dt', 'pg']
 emoji_list = [["smile", "mrgreen", "question", "wink", "redface", "sad", "crazy", "cool",
@@ -80,35 +84,39 @@ async def img_parser(topic_title, post_content: str):
     return post_content
 
 
-async def reply_parser(post):
+async def reply_parser(post,topic):
     logging.info('开始处理引用和回复')
     post_html = ''
     pattern_quote = re.compile(
-        r'\[b\]\s*Post\s*by\s*\[uid=?\d*\](.*)\[/uid\].*\(.*\):\[/b\](.*)\[\/quote\](.*)')
+        r'\[b\]\s*Post\s*by\s*\[uid=?(\d*)\](.*)\[/uid\].*\((.*)\):\[/b\](.*)\[\/quote\](.*)')
     match_quote = pattern_quote.search(post.content)
     if match_quote:
         logging.debug('引用')
-        quote_uname = match_quote.groups()[0]
-        quote_content = match_quote.groups()[1]
-        post.content = match_quote.groups()[2]
+        quoto_uid=match_quote.groups()[0]
+        quote_uname = match_quote.groups()[1]
+        quote_date_str=match_quote.groups()[2]
+        quote_content = match_quote.groups()[3]
+        post.content = match_quote.groups()[4]
+        quote_date=datetime.datetime.strptime(quote_date_str, '%Y-%m-%d %H:%M:%S')
+        quoted_id=await mongo.search_posts_by_author_and_date(topic.title, quoto_uid,quote_date)
+        topic.posts[quoted_id].quote_by.append(quoted_id)
         post_html += f'<blockquote><p>{quote_uname}:{quote_content}</p></blockquote>{post.content}'
         return post_html
     pattern_reply = re.compile(
-        r'\[b\]Reply to \[pid=\d+,\d+,\d+\]Reply\[/pid\] Post by \[uid=?\d*\](.*)\[/uid\] \((.*)\)\[/b\](.*)')
+        r'\[b\]Reply to \[pid=\d+,\d+,\d+\]Reply\[/pid\] Post by \[uid=?(\d*)\](.*)\[/uid\] \((.*)\)\[/b\](.*)')
     match_reply = pattern_reply.search(post.content)
     if match_reply:
         logging.debug('回复')
-        post_uname = match_reply.groups()[0]
-        post_time = match_reply.groups()[1]
-        post.content = match_reply.groups()[2]
+        replyed_post_uid = match_reply.groups()[0]
+        replyed_post_uname = match_reply.groups()[1]
+        replyed_post_date_str = match_reply.groups()[2]
+        post.content = match_reply.groups()[3]
         # print(post_uname, post_time)
-        pattern_post_content = re.compile(
-            rf'<p>\d+:{post_uname},{post_time},\d+,up:\d+:<br>(.*)\n?</p>\s')
-        replyed_post_content = '未匹配到'
-        match = pattern_post_content.search(nga.result_html)
-        if match:
-            replyed_post_content = match.group(1)
-        post_html += f'<blockquote><p>{post_uname}:{replyed_post_content}</p></blockquote>{post.content}'
+        replyed_post_date = datetime.datetime.strptime(replyed_post_date_str, '%Y-%m-%d %H:%M:%S')
+        replyed_post_id= await mongo.search_posts_by_author_and_date(topic.title, replyed_post_uid, replyed_post_date)
+        topic.posts[replyed_post_id].replyed_by.append(replyed_post_id)
+        replyed_post_content = topic.posts[replyed_post_id].content
+        post_html += f'<blockquote><p>{replyed_post_uname}:{replyed_post_content}</p></blockquote>{post.content}'
         return post_html
     return post_html
 
@@ -165,14 +173,14 @@ async def page_parser(soup, page,topic:Topic):
         else:
             anonymous_count += 1
             post.author_name= f'匿名{anonymous_count}'#同一个匿名用户可多次发言，须加以区分
-        post.date = str_post_date[i].text
+        date_string = str_post_date[i].text
+        post.date = datetime.strptime(date_string, '%Y-%m-%d %H:%M')
         post.content = str_post_content.text
         post.up_counts = pattern_up_counts.search(str_up_counts[i].string).group(1)
-
         post.content = img_parser(topic.title,post.content)
-        post.content = reply_parser(post)
+        post.content = reply_parser(post,topic)
         result_html = result_html + \
             f'<p>{post.id}:{post.author_name},{post.date},{post.author_id},up:{post.up_counts}:<br>{post.content}</p>\n'
-        topic.posts.append(post)
+        topic.add_post(post)
     logging.info('第%d页解析完成',page)
     return result_html

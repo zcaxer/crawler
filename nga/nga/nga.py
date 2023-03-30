@@ -1,6 +1,7 @@
 # class Nga
 '''nga class '''
 import logging
+from Enum import enum
 
 
 class Nga:
@@ -12,6 +13,11 @@ class Nga:
     url_page = "https://nga.178.com/read.php?tid={id}&page={page}"
     url_index = "https://nga.178.com/thread.php?fid=-7"
 
+
+class TopicState(Enum):
+    NEW = 0
+    LIVE = 1
+    DEAD = 2
 
 class Section:
     url = ''
@@ -29,8 +35,8 @@ class Topic:
         self.page_count = 0
         self.posts=[]
         self.result_html=''
-        self.soup=None
         self.html=''
+        self.state=TopicState.NEW
 
     def write_to_result_html(self):
         logging.info('开始写入%s.html', self.title)
@@ -48,6 +54,11 @@ class Topic:
             'post_count': self.post_count,
             'page_count': self.page_count,
         }
+
+    def add_post(self, post):
+            self.posts.append(post)
+            self.post_count += 1
+            self.last_post_date = post.date
 
 
 class Post:
