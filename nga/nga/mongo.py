@@ -21,14 +21,15 @@ class Mongo:
         return cls._instance
 
     async def store_topic(self, topic):
+        topic_id = str(topic.tid)
         if self.async_client is not None:
-            client = self.async_client['nga_topic'][topic.title]
+            client = self.async_client['nga_topic'][topic_id]
         for i in topic.posts:
             bson_data = i.to_dict()
             await client.insert_one(bson_data)
         await self.async_client.nga.topics.insert_one(topic.to_dict())
 
-    async def store_cookies(self, cookies):
+    def store_cookies(self, cookies):
         self.sync_client.nga.info.insert_one({'cookies': cookies})
 
     def read_cookies(self):
@@ -36,9 +37,17 @@ class Mongo:
             {'cookies': {'$exists': True}})
         return cookie['cookies']
 
-    async def search_posts_by_author_and_date(self, topic_title, author_id, date):
+    async def search_posts_by_author_and_date(self, topic_id, author_id, date):
+        topic_id = str(topic_id)
         if self.async_client is not None:
-            client = self.async_client['nga_topic'][topic_title]
+            client = self.async_client['nga_topic'][topic_id]
         query = {"author_id": author_id, "date": date}
         result = await client.find_one(query)
-        return result['id']
+        if result==None:return None
+        return result['pid']
+
+    async def get_crawler_info(self):
+        self.async_client.nga.topics.find_all()
+
+if __name__=="__main__":
+    mongo= Mongo()

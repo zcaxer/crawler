@@ -1,7 +1,7 @@
 # class Nga
 '''nga class '''
 import logging
-from Enum import enum
+from enum import Enum
 
 
 class Nga:
@@ -28,7 +28,7 @@ class Topic:
     帖子内容在posts[0]'''
 
     def __init__(self, topic_id):
-        self.id = topic_id
+        self.tid = topic_id
         self.title = ''
         self.last_post_date = ''
         self.post_count = 0
@@ -48,7 +48,7 @@ class Topic:
 
     def to_dict(self):
         return {
-            'id': self.id,
+            'tid': self.tid,
             'title': self.title,
             'last_post_date': self.last_post_date,
             'post_count': self.post_count,
@@ -60,10 +60,16 @@ class Topic:
             self.post_count += 1
             self.last_post_date = post.date
 
+    def find_post_id_by_author_id_and_date(self, author_id, date):
+        for post in self.posts:
+            if post.author_id == author_id and post.date == date:
+                return post.pid
+        return None
+
 
 class Post:
-    def __init__(self, id):
-        self.id = id  # 楼层
+    def __init__(self, pid):
+        self.pid = pid  # 楼层
         self.author_id = 0
         self.author_name=''
         self.date = None
@@ -71,13 +77,13 @@ class Post:
         self.quote_to = []
         self.reply_to = []
         self.up_counts = 0
-        self.reply_by = []
-        self.quote_by = []
+        self.replied_by = []
+        self.quoted_by = []
 
 
     def to_dict(self):
         return {
-            'id': self.id,
+            'pid': self.pid,
             'author_id': self.author_id,
             'author_name': self.author_name,
             'date': self.date,
@@ -85,8 +91,8 @@ class Post:
             'quote_to': self.quote_to,
             'reply_to': self.reply_to,
             'up_counts': self.up_counts,
-            'reply_by': self.reply_by,
-            'quote_by': self.quote_by
+            'replied_by': self.replied_by,
+            'quoted_by': self.quoted_by
         }
 
 class User:

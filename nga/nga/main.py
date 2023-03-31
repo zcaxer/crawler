@@ -6,14 +6,13 @@ import argparse
 import asyncio
 import json
 import logging
-import requests
 from bs4 import BeautifulSoup as bs
 import aiofiles
 
-from nga.request import Request
-from nga.mongo import Mongo
-from nga.nga import Nga,Topic,TopicState
-import nga.parser as parser
+from .request import Request
+from .mongo import Mongo
+from .nga import Nga,Topic,TopicState
+from .parser import Parser as parser
 
 # TODO:查找回复内容原文并展示
 # TODO:重构，单元化
@@ -21,7 +20,7 @@ import nga.parser as parser
 # TODO:find post I interested in
 
 
-class Topic_clawler:
+class Nga_clawler:
     request=None
     mongo=None
     topics=[]
@@ -45,9 +44,11 @@ class Topic_clawler:
         cookie_jar = self.request.session.cookie_jar
         cookies = {cookie.key: cookie.value for cookie in cookie_jar}
         self.mongo.store_cookies(cookies)
-        self.request.session.close()
+        #self.request.session.close()
         self.mongo.async_client.close()
         self.mongo.sync_client.close()
+
+
 
     def update(self):
         keys = list(self.ongoing_ids.keys())
@@ -55,7 +56,7 @@ class Topic_clawler:
             try:
                 page = self.ongoing_ids[id]['last_page']
                 time.sleep(1)
-                rsps = self.request.get(Nga.url_page.format(id=id, page=page))
+                rsps = self.request.get_page(id, page)
                 soup = bs(rsps.text, 'lxml')
                 t = soup.title.text
                 if t == '找不到主题' or t == "帖子发布或回复时间超过限制" or t == "帖子被设为隐藏" or t == '帖子审核未通过' :
@@ -68,7 +69,7 @@ class Topic_clawler:
                     last_posttime = s_posttime[-1].text
                     if last_posttime != self.ongoing_ids[id]['last_time']:
                         max_page = parser.get_max_page(soup)
-                        nga_clawler = Topic_clawler(id)
+                        nga_clawler = Nga_clawler(id)
                         nga_clawler.title = self.ongoing_ids[id]['title']
                         for p in range(page, max_page+1):
                             html =self.request.get_page(id, p)
@@ -96,31 +97,31 @@ class Topic_clawler:
                         nga_clawler.page_count = max_page
                         nga_clawler.write_to_result_html()
                         nga_clawler.finish()
-                Topic_clawler.dump()
+                Nga_clawler.dump()
             except Exception as e:
                 traceback.print_exc()
                 logging.info(f'{id}请求失败')    
 
     async def start(self,topic,refresh_old_html=False):
-        page1 =await self.request.get_page(topic.id, 1)
+        page1 =await self.request.get_page(topic.tid, 1)
         soup = bs(page1, 'lxml')
         topic.title=await parser.get_title(soup)
         topic.page_count =await parser.get_page_count(soup)
-        if not os.path.exists(topic.title):
+        if not os.path.exists(f'htmls/{topic.title}'):
             logging.info('创建文件夹%s',topic.title)
-            os.mkdir(f'htmls/{self.title}')
-        with open(f'htmls/{topic.title}/{self.title}1.html', 'w', encoding="gbk") as f:
+            os.mkdir(f'htmls/{topic.title}')
+        with open(f'htmls/{topic.title}/{topic.title}1.html', 'w', encoding="gbk") as f:
             f.write(page1)
             logging.info('写入%s1.html',topic.title)
-        logging.info('开始解析%s第1页',self.title)
+        logging.info('开始解析%s第1页',topic.title)
         topic.result_html += await parser.page_parser(soup, 1, topic)
         for i in range(2, topic.page_count+1):
-            logging.info('开始请求%s%d.html',self.title,i)
-            html = self.request.get_page(topic.id,i, refresh_old_html)
-            with open(f'htmls/{self.title}/{self.title}{i}.html', 'w', encoding="gbk") as f:
+            logging.info('开始请求%s%d.html',topic.title,i)
+            html = await self.request.get_page(topic.tid,i, refresh_old_html)
+            with open(f'htmls/{topic.title}/{topic.title}{i}.html', 'w', encoding="gbk") as f:
                 f.write(html)
-                logging.info('写入%s%d.html',self.title,i)
-            logging.info('开始解析%s第%d页',self.title,i)
+                logging.info('写入%s%d.html',topic.title,i)
+            logging.info('开始解析%s第%d页',topic.title,i)
             soup=bs(html, 'lxml')
             topic.result_html+=await parser.page_parser(soup, i,topic)
         topic.write_to_result_html()
@@ -128,8 +129,8 @@ class Topic_clawler:
         await self.mongo.store_topic(topic)
 
 
-    def get_index(self):
-        r = self.request.get(Nga.url_index)
+    async def get_index(self):
+        r = await self.request.session.get(Nga.url_index)
         content = r.text.replace('�', '')
         with open('index.html', 'w') as f:
             f.write(content)
@@ -149,14 +150,16 @@ if __name__ == "__main__":
     arg_parser.add_argument('-f','--force',action='store_true',help='强制更新该id的帖子')
     arg_parser.add_argument('id',metavar='ID', nargs='*',type=int)
     args=arg_parser.parse_args()
+    
+    async def main():
 
-    if args.update :
-        Topic_clawler.update()
-    print(args)    
-    nga_clawler = Topic_clawler(args.id)
-    for i in nga_clawler.topics:
-        topic=Topic(i)
-        topic.state=nga_clawler.start(topic)
+        nga_clawler = Nga_clawler(args.id)
+        if args.update :
+            nga_clawler.update()
+        print(args)    
+        for topic in nga_clawler.topics:
+            topic.state=nga_clawler.start(topic)
 
+    asyncio.run(main())
     #Nga.start_new()
-    topic_clawler.get_index()
+    #nga_clawler.get_index()

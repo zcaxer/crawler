@@ -19,15 +19,16 @@ class Request:
 
     async def download_img(self, url: str, topic_title: str, pic_name: str):
         logging.info('Downloading %s ', pic_name)
-        if not os.path.exists(f'../htmls/{path}/img'):
-            os.mkdir(f'../htmls/{path}/img')
-        if os.path.exists(f'../htmls/{path}/img/{pic_name}'):
+        path=topic_title
+        if not os.path.exists(f'htmls/{path}/img'):
+            os.mkdir(f'htmls/{path}/img')
+        if os.path.exists(f'htmls/{path}/img/{pic_name}'):
             logging.debug('%s already exists', pic_name)
             return
         if url[1] == 'm':
             url = Nga.url_img+url
         async with self.session.get(url) as resp:
-            with open(f'../htmls/{path}/img/{pic_name}', 'wb') as f:
+            with open(f'htmls/{path}/img/{pic_name}', 'wb') as f:
                 while True:
                     chunk = await resp.content.read(1024)
                     if not chunk:
@@ -35,8 +36,8 @@ class Request:
                     f.write(chunk)
 
     async def get_page(self, topic_id, page: int, topic_title=None, refresh_old_html=False, delay=2):
-        if refresh_old_html == False and os.path.exists(f'../htmls/{topic_title}/{topic_title}{page}.html'):
-            with open(f'../htmls/{topic_title}/{topic_title}{page}.html', 'r', encoding='gbk') as f:
+        if refresh_old_html == False and os.path.exists(f'htmls/{topic_title}/{topic_title}{page}.html'):
+            with open(f'htmls/{topic_title}/{topic_title}{page}.html', 'r', encoding='gbk') as f:
                 return f.read()
         elif page == 1:
             url = Nga.url_first_page.format(id=topic_id)
@@ -44,7 +45,8 @@ class Request:
             url = Nga.url_page.format(id=topic_id, page=page)
         time.sleep(delay)
         rsps = await self.session.get(url)
-        if rsps.status_code == 403:
+        if rsps.status == 403:
             logging.warning('第%d页请求失败,403',page)
             return
-        return rsps.text.replace('�', '')
+        html=await rsps.text()
+        return html.replace('�', '')
