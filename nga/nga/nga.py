@@ -14,7 +14,7 @@ class Nga:
     url_index = "https://nga.178.com/thread.php?fid=-7"
 
 
-class TopicState(Enum):
+class TopicStatus(Enum):
     NEW = 0
     LIVE = 1
     DEAD = 2
@@ -27,16 +27,17 @@ class Topic:
     ''' topic class 
     帖子内容在posts[0]'''
 
-    def __init__(self, topic_id):
+    def __init__(self, topic_id,page_count=0,last_post_date=None,last_post_pid=0 ,title=None):
         self.tid = topic_id
-        self.title = ''
-        self.last_post_date = ''
-        self.post_count = 0
-        self.page_count = 0
+        self.title = title
+        self.last_post_date = last_post_date
+        self.post_count = 0 #回复数，不再存入db，若需要从db读取
+        self.last_post_pid =last_post_pid #最后回复的楼层
+        self.page_count = page_count
         self.posts=[]
         self.result_html=''
         self.html=''
-        self.state=TopicState.NEW
+        self.status=TopicStatus.NEW
 
     def write_to_result_html(self):
         logging.info('开始写入%s.html', self.title)
@@ -51,14 +52,15 @@ class Topic:
             'tid': self.tid,
             'title': self.title,
             'last_post_date': self.last_post_date,
-            'post_count': self.post_count,
+            'last_post_pid': self.last_post_pid,
             'page_count': self.page_count,
+            'status': self.status,
         }
 
     def add_post(self, post):
             self.posts.append(post)
-            self.post_count += 1
             self.last_post_date = post.date
+            self.last_post_pid = post.pid
 
     def find_post_id_by_author_id_and_date(self, author_id, date):
         for post in self.posts:

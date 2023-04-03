@@ -13,10 +13,12 @@ arg_parser.add_argument(
 arg_parser.add_argument('id', metavar='ID', nargs='*', type=int)
 args = arg_parser.parse_args()
 
+logging.basicConfig(level=logging.DEBUG)
 
 async def main():
-    #if args.update:
-        #nga_clawler.update()
+    if args.update:
+        crawler=Nga_clawler()
+        #clawler.update()
     print(args)
     #nga_clawler = Nga_clawler(args.id)
     nga_clawler= Nga_clawler([35818299])
