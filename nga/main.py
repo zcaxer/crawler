@@ -2,7 +2,7 @@ import logging
 import asyncio
 from nga.main import Nga_clawler
 import argparse
-from nga.nga import Topic
+from nga.nga import Nga
 
 logging.basicConfig(level=logging.DEBUG)
 arg_parser = argparse.ArgumentParser(description="nga 爬虫")
@@ -21,8 +21,8 @@ async def main():
         #clawler.update()
     print(args)
     #nga_clawler = Nga_clawler(args.id)
-    nga_clawler= Nga_clawler([35818299])
+    nga_clawler= Nga_clawler([35695802])
     for topic in nga_clawler.topics:
-        topic.state = await nga_clawler.start(topic)
+        await nga_clawler.start(topic)
 
 asyncio.run(main())

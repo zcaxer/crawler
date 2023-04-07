@@ -48,5 +48,5 @@ class Request:
         if rsps.status == 403:
             logging.warning('第%d页请求失败,403',page)
             return
-        html=await rsps.text()
+        html=await rsps.text(encoding='gbk',errors='ignore')
         return html.replace('�', '')

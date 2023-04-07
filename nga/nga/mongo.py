@@ -28,7 +28,7 @@ class Mongo:
             bson_data = i.to_dict()
             await client.insert_one(bson_data)
             query = {
-                "pid": bson_data["pid"],
+                "index": bson_data["index"],
                 "author_id": bson_data["author_id"],
                 "date": bson_data["date"],
                 "content": bson_data["content"],
@@ -47,25 +47,26 @@ class Mongo:
         cookie = self.sync_client.nga.info.find_one({"cookies": {"$exists": True}})
         return cookie["cookies"]
 
-    async def search_posts_by_author_and_date(self, topic_id, author_id, date):
+    async def search_post(self, topic_id,post_pid):
+        '''return post.index '''
         topic_id = str(topic_id)
         if self.async_client is not None:
             client = self.async_client["nga_topic"][topic_id]
-        query = {"author_id": author_id, "date": date}
+        query = {"pid": post_pid}
         result = await client.find_one(query)
         if result == None:
             return None
-        return result["pid"]
+        return result
 
     async def get_crawler_info(self):
         self.async_client.nga.topics.find_all()
 
-    async def get_page_count_and_last_post_date(self):
+    async def get_topic_info(self):
         """
-        This function retrieves the page count and last post date from the nga.topics collection where status=1.
+        This function retrieves  "status", "tid", "page_count", "last_post_date","title","last_post_index"
         """
         cursor = await self.async_client.nga.topics.find(
-            {"status": 1}, {"_id": 0, "tid": 1, "page_count": 1, "last_post_date": 1,"title": 1,"last_post_pid": 1}
+            {"status": 1}, {"_id": 0, "tid": 1, "page_count": 1, "last_post_date": 1,"title": 1,"last_post_index": 1}
         )
         return cursor
 

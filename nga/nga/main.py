@@ -10,7 +10,7 @@ import aiofiles
 
 from .request import Request
 from .mongo import Mongo
-from .nga import Nga, Topic, TopicStatus
+from .nga import Nga
 from .parser import Parser as parser
 
 # TODO:查找回复内容原文并展示
@@ -30,7 +30,7 @@ class Nga_clawler:
         if self.mongo is None:
             self.mongo = Mongo()
         for i in topic_id_list:
-            self.topics.append(Topic(i))
+            self.topics.append(Nga.Topic(i))
 
     def __del__(self):
         cookie_jar = self.request.session.cookie_jar
@@ -41,9 +41,9 @@ class Nga_clawler:
         self.mongo.sync_client.close()
 
     async def update(self):
-        topics =  await self.mongo.get_page_count_and_last_post_date()
+        topics =  await self.mongo.get_topic_info()
         for topic_dict in topics:
-            topic = Topic(
+            topic = Nga.Topic(
                 topic_dict['tid'], topic_dict['page_count'], topic_dict['last_post_date'])
             try:
                 rsps = await self.request.get_page(topic.tid, topic.page_count)
@@ -85,7 +85,7 @@ class Nga_clawler:
                                 r'\s*\<\s*p\s*\>\s*(\d+)\s*:.*\<\s*/p\s*\>\s*')
                             while True:
                                 n = int(pattern.match(new_lines[0]).group(1))
-                                if n <= topic.last_post_pid:
+                                if n <= topic.last_post_index:
                                     new_lines.pop(0)
                                 else:
                                     break
@@ -124,7 +124,7 @@ class Nga_clawler:
             soup = bs(html, 'lxml')
             topic.result_html += await parser.page_parser(soup, i, topic)
         topic.write_to_result_html()
-        topic.state = TopicStatus.LIVE
+        topic.status = Nga.TopicStatus.LIVE
         await self.mongo.store_topic(topic)
 
     async def get_index(self):
