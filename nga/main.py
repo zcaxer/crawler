@@ -22,6 +22,7 @@ async def main():
     print(args)
     #nga_clawler = Nga_clawler(args.id)
     nga_clawler= Nga_clawler([35695802])
+    nga_clawler.topics[0].title='许愿大家对另一半不能说的秘密'
     for topic in nga_clawler.topics:
         await nga_clawler.start(topic)
 

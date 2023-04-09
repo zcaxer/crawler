@@ -120,8 +120,8 @@ class Nga:
                 self.author_name = author_name
                 self.date = date
                 self.content = content
-                self.quote_to = []
-                self.reply_to = []
+                self.quote_to = None
+                self.reply_to = None
                 self.up_count = up_count
                 self.replied_by = []
                 self.quoted_by = []

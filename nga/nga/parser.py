@@ -298,6 +298,8 @@ emoji_list = [
 
 
 class Parser:
+    anony_number=0
+
     @staticmethod
     def _repl(matchobj):
         pic_class = matchobj.group(1)
@@ -347,39 +349,42 @@ class Parser:
         return post_content
 
     @staticmethod
-    async def comment_parser(post:Nga.Post, topic:Nga.Topic):
+    async def comment_parser(post: Nga.Post, topic: Nga.Topic):
         logging.info("开始处理引用和回复")
-        post_html = ""
+        parsed_html = ""
         pattern_comment = re.compile(
-            r"(\[quote\]|\[b\]).*\[pid=(\d+),.*? Post\s*by\s*\[uid=?(\d*)\](.*)\[/uid\].*\[\w+\](.*)$"
+            r"(\[quote\]|\[b\]).*\[[pt]id=(\d+).*?Post\s*by\s*\[uid=?(-?\d*)\](.*)\[/uid\].*\[\S+\](.*)$"
         )
         match_comment = pattern_comment.search(post.content)
         if match_comment:
             info_list = match_comment.groups()
-            comment_type=info_list[0]
-            if comment_type == "[quote]":
-                comment_type='引用'
-            elif comment_type == "[b]":
-                comment_type = '回复'
-            logging.debug("%d楼检测到%s", post.index, comment_type)
+            comment_type = info_list[0]
             commented_pid = int(info_list[1])
             commented_uid_str = info_list[2]
             commented_post = await topic.search_post(commented_pid)
-            if commented_uid_str == "":
-                #commented_uid = 0  # 匿名
-                commented_uname = commented_post.author_name
-            else:
-                #commented_uid = int(commented_uid_str)
-                commented_uname = info_list[3]
             post.content = info_list[4]
-
             if commented_post is not None:
-                topic.posts[commented_pid].replied_by.append(post.index)
-                post.reply_to.append(commented_pid)
-                replied_post_content = topic.posts[commented_pid].content
-                post_html += f"<blockquote><p>{commented_uname}:{replied_post_content}</p></blockquote>{post.content}"
+                if commented_uid_str == "":
+                    # commented_uid = 0  # 匿名
+                    commented_uname = commented_post.author_name
+                else:
+                    # commented_uid = int(commented_uid_str)
+                    commented_uname = info_list[3]
+                if comment_type == "[quote]":
+                    comment_type = "引用"
+                    commented_post.quoted_by.append(post.index)
+                    post.quote_to = commented_post.index
+
+                elif comment_type == "[b]":
+                    comment_type = "回复"
+                    commented_post.replied_by.append(post.index)
+                    post.reply_to = commented_post.index
+
+                logging.debug("%d楼检测到%s", post.index, comment_type)
+                parsed_html += f"<blockquote><p>{commented_uname}:{commented_post.content}</p></blockquote>{post.content}"
+                return parsed_html
         return post.content
-     
+
     @staticmethod
     async def get_title(soup):
         logging.info("开始解析标题")
@@ -406,13 +411,13 @@ class Parser:
         logging.debug("开始解析第%d页", page)
         if topic.title is None:
             topic.title = Parser.get_title(soup)
-        post_infos = soup.find_all("table", class_="c2")
+        post_infos = soup.find_all("td", class_="c2")
         pattern_number = re.compile(r"\d+")
         pattern_user_info = re.compile(r"commonui\.userInfo\.setAll\(\s+(.*)\)")
         pattern_script = re.compile(
-            r"postBtnPos\d+'\),\nnull,null,(\d+),-?\d+,\nnull,'(-?\d+)',-?\d+,'\d+,(\d+),\d+','\d+'"
+            r"postBtnPos\d+'\),\s*null,null,(\d+),-?\d+,\s*null,'(-?\d+)',-?\d+,'\d+,(\d+),\d+','\d*'"
         )
-        #str_author_uid = soup.find_all(id=re.compile(r"postauthor\d+"))
+        # str_author_uid = soup.find_all(id=re.compile(r"postauthor\d+"))
         str_user_infos = soup.find(
             "script", {"type": "text/javascript"}, text=pattern_user_info
         )
@@ -421,7 +426,7 @@ class Parser:
         result_html = ""
         for post_info in post_infos:
             post_index_str = post_info["id"]
-            post_index = int(pattern_number.search(post_index_str))
+            post_index = int(pattern_number.search(post_index_str).group())
             post = Nga.Post(post_index)
             post_script_str = post_info.parent.parent.next_sibling.text
             try:
@@ -431,21 +436,25 @@ class Parser:
             post.pid = int(info_list[0])
             post.author_id = int(info_list[1])
             post.up_count = int(info_list[2])
+            if post.author_id < 0:
+               Parser.anony_number+=1 
+               post.author_id = user_info_json[str(post.author_id)]["username"]
+               post.author_name=f"匿名{-1*post.author_id+Parser.anony_number}"  # 匿名用户从,每一页从 -1开始,每位减1
+
             if str(post.author_id) in user_info_json:
                 post.author_name = user_info_json[str(post.author_id)]["username"]
-            elif post.author_id < 0:
-                post.author_name = f"匿名{-1*post.author_id}"  # 匿名用户从 -1开始,每位减1
             else:
                 logging.error("%s获取用户名失败", post.author_id)
             date_string = post_info.span.text
             post.date = datetime.strptime(date_string, "%Y-%m-%d %H:%M")
-            post.content = post_info.find("span", class_="postcontent").text
+            post.content = post_info.find(["span", "p"], class_="postcontent").text
             post.content = await Parser.img_parser(topic.title, post.content)
-            post.content = await Parser.comment_parser(post, topic)
+            post.content = await Parser.emoji_parser(post.content)
+            parsed_html = await Parser.comment_parser(post, topic)
             result_html = (
                 result_html
-                + f"<p>{post.index}:{post.author_name},{post.date},{post.author_id},up:{post.up_count}:<br>{post.content}</p>\n"
+                + f"<p>{post.index}:{post.author_name},{post.author_id},{post.date},up:{post.up_count}:<br>{parsed_html}</p>\n"
             )
-            topic.add_post(post,True)
+            topic.add_post(post, True)
         logging.info("第%d页解析完成", page)
         return result_html

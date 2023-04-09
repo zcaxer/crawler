@@ -36,9 +36,12 @@ class Request:
                     f.write(chunk)
 
     async def get_page(self, topic_id, page: int, topic_title=None, refresh_old_html=False, delay=2):
-        if refresh_old_html == False and os.path.exists(f'htmls/{topic_title}/{topic_title}{page}.html'):
-            with open(f'htmls/{topic_title}/{topic_title}{page}.html', 'r', encoding='gbk') as f:
-                return f.read()
+        html_path=f'htmls/{topic_title}/{topic_title}{page}.html'
+        print(html_path)
+        #print(os.getcwd())
+        if refresh_old_html == False and os.path.exists(html_path):
+            with open(html_path, 'r', encoding='gbk') as f:
+                return f.read(),True
         elif page == 1:
             url = Nga.url_first_page.format(id=topic_id)
         else:
@@ -47,6 +50,6 @@ class Request:
         rsps = await self.session.get(url)
         if rsps.status == 403:
             logging.warning('第%d页请求失败,403',page)
-            return
+            return '',False
         html=await rsps.text(encoding='gbk',errors='ignore')
-        return html.replace('�', '')
+        return html.replace('�', ''),False

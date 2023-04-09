@@ -25,19 +25,19 @@ class Mongo:
         if self.async_client is not None:
             client = self.async_client["nga_topic"][topic_id]
         for i in topic.posts:
-            bson_data = i.to_dict()
-            await client.insert_one(bson_data)
-            query = {
-                "index": bson_data["index"],
-                "author_id": bson_data["author_id"],
-                "date": bson_data["date"],
-                "content": bson_data["content"],
-                "reply_to": bson_data["reply_to"],
-                "quote_to": bson_data["quote_to"],
-            }
-            result = await client.find_one(query)
-            if result == None:
-                await client.insert_one(bson_data)
+            if i is not None:
+                bson_data = i.to_dict()
+                query = {
+                    "index": bson_data["index"],
+                    "author_id": bson_data["author_id"],
+                    "date": bson_data["date"],
+                    "content": bson_data["content"],
+                    "reply_to": bson_data["reply_to"],
+                    "quote_to": bson_data["quote_to"],
+                }
+                result = await client.find_one(query)
+                if result == None:
+                    await client.insert_one(bson_data)
         await self.async_client.nga.topics.update_one({"tid": topic.tid}, {"$set": topic.to_dict()}, upsert=True)
 
     def store_cookies(self, cookies):
