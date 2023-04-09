@@ -34,8 +34,8 @@ class Nga:
         ''' topic class 
         帖子内容在posts[0]'''
 
-        def __init__(self, topic_id, page_count=0, last_post_date=None, last_post_index=0, title=None):
-            self.tid = topic_id
+        def __init__(self, topic_id, page_count=0, last_post_date=None, last_post_index=0, title=None,anony_posters=[]):
+            self.tid = int(topic_id)
             self.title = title
             self.last_post_date = last_post_date
             self.post_count = 0  # 回复数，不再存入db，若需要从db中查询
@@ -43,7 +43,7 @@ class Nga:
             self.page_count = page_count
             self.posts = []
             self.result_html = ''
-            self.html = ''
+            self.anony_posters=anony_posters
             self.status = Nga.TopicStatus.NEW
             if Nga.mongo is None:
                 Nga.mongo = Mongo()
@@ -64,6 +64,7 @@ class Nga:
                 'last_post_index': self.last_post_index,
                 'page_count': self.page_count,
                 'status': self.status.value,
+                'anony_posters':self.anony_posters
             }
 
         def add_post(self, post,new=False):
@@ -89,10 +90,10 @@ class Nga:
                 post_dict= await Nga.mongo.search_post(self.tid,post_pid)
                 if post_dict is None:
                     return None
+                    logging.warning('帖子%d搜索失败')
                 post = Nga.Post(post_dict)
                 self.add_post(post)
             return post
-
 
     class Post:
         def post_from_dict(self, info_dict:dict):
@@ -108,6 +109,7 @@ class Nga:
                 self.up_count = info_dict.get('up_count', None)
                 self.replied_by = info_dict.get('replied_by', None)
                 self.quoted_by = info_dict.get('quoted_by', None)
+                
 
 
         def __init__(self, index_or_dict, pid=0, author_id=0, author_name='', date=None, content='',up_count=0):

@@ -298,7 +298,6 @@ emoji_list = [
 
 
 class Parser:
-    anony_number=0
 
     @staticmethod
     def _repl(matchobj):
@@ -353,7 +352,7 @@ class Parser:
         logging.info("开始处理引用和回复")
         parsed_html = ""
         pattern_comment = re.compile(
-            r"(\[quote\]|\[b\]).*\[[pt]id=(\d+).*?Post\s*by\s*\[uid=?(-?\d*)\](.*)\[/uid\].*\[\S+\](.*)$"
+            r"(\[quote\]|\[b\]).*\[[pt]id=(\d+).*?Post\s*by\s*\[uid=?(-?\d*)\](.*)\[/uid\].*\[/(?:b|quote)\](.*?)$"
         )
         match_comment = pattern_comment.search(post.content)
         if match_comment:
@@ -365,7 +364,7 @@ class Parser:
             post.content = info_list[4]
             if commented_post is not None:
                 if commented_uid_str == "":
-                    # commented_uid = 0  # 匿名
+                    #commented_uid = commented_uid_str  # 匿名
                     commented_uname = commented_post.author_name
                 else:
                     # commented_uid = int(commented_uid_str)
@@ -415,7 +414,7 @@ class Parser:
         pattern_number = re.compile(r"\d+")
         pattern_user_info = re.compile(r"commonui\.userInfo\.setAll\(\s+(.*)\)")
         pattern_script = re.compile(
-            r"postBtnPos\d+'\),\s*null,null,(\d+),-?\d+,\s*null,'(-?\d+)',-?\d+,'\d+,(\d+),\d+','\d*'"
+            r"postBtnPos\d+'\),\s*null,null,(\d+),-?\d+,\s*null,'(-?\d+)',-?\d+,'\d+,(\d+),\d+','-?\d*'"
         )
         # str_author_uid = soup.find_all(id=re.compile(r"postauthor\d+"))
         str_user_infos = soup.find(
@@ -436,15 +435,18 @@ class Parser:
             post.pid = int(info_list[0])
             post.author_id = int(info_list[1])
             post.up_count = int(info_list[2])
-            if post.author_id < 0:
-               Parser.anony_number+=1 
-               post.author_id = user_info_json[str(post.author_id)]["username"]
-               post.author_name=f"匿名{-1*post.author_id+Parser.anony_number}"  # 匿名用户从,每一页从 -1开始,每位减1
-
             if str(post.author_id) in user_info_json:
                 post.author_name = user_info_json[str(post.author_id)]["username"]
             else:
                 logging.error("%s获取用户名失败", post.author_id)
+            if post.author_id < 0:
+                # 匿名用户,id为 userInfo 中的username,author_name为匿名+第几个出现的匿名poster
+                post.author_id = post.author_name
+                if post.author_id in topic.anony_posters:
+                    post.author_name=f'匿名{topic.anony_posters.index(post.author_id)}' 
+                else:
+                    topic.anony_posters.append(post.author_id)
+                    post.author_name=f"匿名{len(topic.anony_posters)}" 
             date_string = post_info.span.text
             post.date = datetime.strptime(date_string, "%Y-%m-%d %H:%M")
             post.content = post_info.find(["span", "p"], class_="postcontent").text

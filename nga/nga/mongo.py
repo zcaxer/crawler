@@ -38,17 +38,21 @@ class Mongo:
                 result = await client.find_one(query)
                 if result == None:
                     await client.insert_one(bson_data)
-        await self.async_client.nga.topics.update_one({"tid": topic.tid}, {"$set": topic.to_dict()}, upsert=True)
+        await self.async_client.nga.topics.update_one(
+            {"tid": topic.tid}, {"$set": topic.to_dict()}, upsert=True
+        )
 
     def store_cookies(self, cookies):
-        self.sync_client.nga.info.update_one({"cookies": {"$exists": True}}, {"$set": {"cookies": cookies}}, upsert=True)
+        self.sync_client.nga.info.update_one(
+            {"cookies": {"$exists": True}}, {"$set": {"cookies": cookies}}, upsert=True
+        )
 
     def read_cookies(self):
         cookie = self.sync_client.nga.info.find_one({"cookies": {"$exists": True}})
         return cookie["cookies"]
 
-    async def search_post(self, topic_id,post_pid):
-        '''return post.index '''
+    async def search_post(self, topic_id, post_pid):
+        """return post.index"""
         topic_id = str(topic_id)
         if self.async_client is not None:
             client = self.async_client["nga_topic"][topic_id]
@@ -65,8 +69,17 @@ class Mongo:
         """
         This function retrieves  "status", "tid", "page_count", "last_post_date","title","last_post_index"
         """
-        cursor = await self.async_client.nga.topics.find(
-            {"status": 1}, {"_id": 0, "tid": 1, "page_count": 1, "last_post_date": 1,"title": 1,"last_post_index": 1}
+        cursor = self.async_client.nga.topics.find(
+            {"status": 1},
+            {
+                "_id": 0,
+                "tid": 1,
+                "page_count": 1,
+                "last_post_date": 1,
+                "title": 1,
+                "last_post_index": 1,
+                "anony_posters": 1,
+            },
         )
         return cursor
 

@@ -25,12 +25,12 @@ class Nga_clawler:
     topics = []
 
     def __init__(self, topic_id_list=[]):
-        if self.request is None:
-            self.request = Request()
+        if Nga_clawler.request is None:
+            Nga_clawler.request = Request()
         if Nga_clawler.mongo is None:
             Nga_clawler.mongo = Mongo()
         for i in topic_id_list:
-            self.topics.append(Nga.Topic(i))
+            self.topics.append(Nga.Topic(int(i)))
 
     def __del__(self):
         cookie_jar = self.request.session.cookie_jar
@@ -45,6 +45,7 @@ class Nga_clawler:
         for topic_dict in topics:
             topic = Nga.Topic(
                 topic_dict['tid'], topic_dict['page_count'], topic_dict['last_post_date'])
+            topic.anony_posters=topic_dict['anony_posters']
             try:
                 rsps = await self.request.get_page(topic.tid, topic.page_count)
                 soup = bs(rsps.text, 'lxml')

@@ -1,9 +1,22 @@
 import logging
 import asyncio
-from nga.main import Nga_clawler
 import argparse
+import json
+
+from nga.main import Nga_clawler
 from nga.nga import Nga
 
+async def read_htmls():
+    with open('nga/nga.json','r') as json_file:
+        data = json.load(json_file) 
+    info=data['finished_ids']
+    crawler=Nga_clawler()
+    for key in info:
+        topic=Nga.Topic(key,title=info[key]['title'])
+        crawler.topics.append(topic)
+        await crawler.start(topic)
+
+   
 logging.basicConfig(level=logging.DEBUG)
 arg_parser = argparse.ArgumentParser(description="nga 爬虫")
 arg_parser.add_argument(
@@ -16,14 +29,14 @@ args = arg_parser.parse_args()
 logging.basicConfig(level=logging.DEBUG)
 
 async def main():
+    args.update=1
     if args.update:
         crawler=Nga_clawler()
-        #clawler.update()
+        await crawler.update()
     print(args)
     #nga_clawler = Nga_clawler(args.id)
-    nga_clawler= Nga_clawler([35695802])
-    nga_clawler.topics[0].title='许愿大家对另一半不能说的秘密'
-    for topic in nga_clawler.topics:
-        await nga_clawler.start(topic)
+
+
+    #await read_htmls()
 
 asyncio.run(main())
