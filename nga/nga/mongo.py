@@ -63,7 +63,7 @@ class Mongo:
         return result
 
     async def get_crawler_info(self):
-        self.async_client.nga.topics.find_all()
+        return self.async_client.nga.topics.find_all().to_list(length=None)
 
     async def get_topic_info(self):
         """
@@ -81,7 +81,8 @@ class Mongo:
                 "anony_posters": 1,
             },
         )
-        return cursor
+        docs=await cursor.to_list(length=None)
+        return docs
 
 
 if __name__ == "__main__":

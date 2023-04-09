@@ -29,12 +29,12 @@ args = arg_parser.parse_args()
 logging.basicConfig(level=logging.DEBUG)
 
 async def main():
-    args.update=1
+    crawler=Nga_clawler()
     if args.update:
-        crawler=Nga_clawler()
         await crawler.update()
     print(args)
-    #nga_clawler = Nga_clawler(args.id)
+    for tid in args.id:
+        await crawler.start(Nga.Topic(tid))
 
 
     #await read_htmls()

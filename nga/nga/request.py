@@ -37,7 +37,7 @@ class Request:
 
     async def get_page(self, topic_id, page: int, topic_title=None, refresh_old_html=False, delay=2):
         html_path=f'htmls/{topic_title}/{topic_title}{page}.html'
-        print(html_path)
+        #print(html_path)
         #print(os.getcwd())
         if refresh_old_html == False and os.path.exists(html_path):
             with open(html_path, 'r', encoding='gbk') as f:
@@ -46,10 +46,13 @@ class Request:
             url = Nga.url_first_page.format(id=topic_id)
         else:
             url = Nga.url_page.format(id=topic_id, page=page)
-        time.sleep(delay)
+        await asyncio.sleep(delay)
         rsps = await self.session.get(url)
         if rsps.status == 403:
-            logging.warning('第%d页请求失败,403',page)
-            return '',False
+            try:
+                html=await rsps.text(encoding='gbk',errors='ignore')
+                return html,True
+            except:
+                logging.warning('第%d页请求失败,403',page)                
         html=await rsps.text(encoding='gbk',errors='ignore')
         return html.replace('�', ''),False

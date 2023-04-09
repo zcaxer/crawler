@@ -44,7 +44,7 @@ class Nga:
             self.posts = []
             self.result_html = ''
             self.anony_posters=anony_posters
-            self.status = Nga.TopicStatus.NEW
+            self.status = Nga.TopicStatus.LIVE
             if Nga.mongo is None:
                 Nga.mongo = Mongo()
 
