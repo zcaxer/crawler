@@ -305,7 +305,7 @@ class Parser:
             emoji_class='0'
         try:
             emoji_pic_name=emoji_dict[emoji_class][emoji_code]
-            return f'<img src="../emoji/{emoji_pic_name}.png">'
+            return f'<img src="../emoji/{emoji_pic_name}">'
         except:
             logging.error(f'{emoji_class}:{emoji_code} not found')
             return f"[s:{emoji_class}:{emoji_code}]"

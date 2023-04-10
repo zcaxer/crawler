@@ -9,11 +9,12 @@ from nga.nga import Nga
 async def read_htmls():
     with open('nga/nga.json','r') as json_file:
         data = json.load(json_file) 
-    info=data['finished_ids']
+    info1=data['finished_ids']
+    info2=data['ongoing_ids']
     crawler=Nga_clawler()
+    info= info1 | info2
     for key in info:
         topic=Nga.Topic(key,title=info[key]['title'])
-        crawler.topics.append(topic)
         await crawler.start(topic)
 
    
