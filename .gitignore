@@ -13,3 +13,4 @@ nga/*.html
 qlchat/main_index.html
 qlchat/main_full.html
 nga/nga/__pycache__/
+nga/nga_c/
