@@ -13,7 +13,7 @@ class Nga:
     p_img = r'\[img\].+?\[/img\]'
     url_img = r'https://img.nga.178.com/attachments'
     url_first_page = "https://nga.178.com/read.php?tid={id}"
-    url_page = "https://nga.178.com/read.php?tid={id}&page={page}"
+    url_page = "https://nga.178.com/read.php?tid={id}&page={page_number}"
     url_index = "https://nga.178.com/thread.php?fid=-7"
 
     def __init__(self):

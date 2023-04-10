@@ -114,7 +114,7 @@ class Nga_clawler:
                 logging.info("%d请求失败", topic.tid)
 
     async def start(self, topic, refresh_old_html=False):
-        page1, alredy_exits = await self.request.get_page(
+        page1, need_write = await self.request.get_page(
             topic.tid, 1, topic_title=topic.title
         )
         soup = bs(page1, "lxml")
@@ -123,7 +123,7 @@ class Nga_clawler:
         if not os.path.exists(f"htmls/{topic.title}"):
             logging.info("创建文件夹%s", topic.title)
             os.mkdir(f"htmls/{topic.title}")
-        if not alredy_exits:
+        if need_write:
             with open(
                 f"htmls/{topic.title}/{topic.title}1.html", "w", encoding="gbk"
             ) as f:
@@ -131,21 +131,21 @@ class Nga_clawler:
                 logging.info("写入%s1.html", topic.title)
         logging.info("开始解析%s第1页", topic.title)
         topic.result_html += await parser.page_parser(soup, 1, topic)
-        for i in range(2, topic.page_count + 1):
-            logging.info("开始请求%s%d.html", topic.title, i)
-            html, alredy_exits = await self.request.get_page(
-                topic.tid, i, topic.title, refresh_old_html
+        for page_number in range(2, topic.page_count + 1):
+            logging.info("开始请求%s%d.html", topic.title, page_number)
+            html, need_write = await self.request.get_page(
+                topic.tid, page_number, topic.title, refresh_old_html
             )
-            if not alredy_exits:
+            if need_write:
                 with open(
-                    f"htmls/{topic.title}/{topic.title}{i}.html", "w", encoding="gbk"
+                    f"htmls/{topic.title}/{topic.title}{page_number}.html", "w", encoding="gbk"
                 ) as f:
                     f.write(html)
-                    logging.info("写入%s%d.html", topic.title, i)
+                    logging.info("写入%s%d.html", topic.title, page_number)
             if not html == "" and html is not None:
-                logging.info("开始解析%s第%d页", topic.title, i)
+                logging.info("开始解析%s第%d页", topic.title, page_number)
                 soup = bs(html, "lxml")
-                topic.result_html += await parser.page_parser(soup, i, topic)
+                topic.result_html += await parser.page_parser(soup, page_number, topic)
         topic.write_to_result_html()
         topic.status = Nga.TopicStatus.LIVE
         await self.mongo.store_topic(topic)

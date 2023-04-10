@@ -35,24 +35,24 @@ class Request:
                         break
                     f.write(chunk)
 
-    async def get_page(self, topic_id, page: int, topic_title=None, refresh_old_html=False, delay=2):
-        html_path=f'htmls/{topic_title}/{topic_title}{page}.html'
+    async def get_page(self, topic_id, page_number: int, topic_title=None, refresh_old_html=False, delay=2):
+        html_path=f'htmls/{topic_title}/{topic_title}{page_number}.html'
         #print(html_path)
         #print(os.getcwd())
         if refresh_old_html == False and os.path.exists(html_path):
             with open(html_path, 'r', encoding='gbk') as f:
-                return f.read(),True
-        elif page == 1:
+                return f.read(),False
+        elif page_number == 1:
             url = Nga.url_first_page.format(id=topic_id)
         else:
-            url = Nga.url_page.format(id=topic_id, page=page)
+            url = Nga.url_page.format(id=topic_id, page_number=page_number)
         await asyncio.sleep(delay)
         rsps = await self.session.get(url)
         if rsps.status == 403:
             try:
                 html=await rsps.text(encoding='gbk',errors='ignore')
-                return html,True
+                return html,False
             except:
-                logging.warning('第%d页请求失败,403',page)                
+                logging.warning('第%d页请求失败,403',page_number)                
         html=await rsps.text(encoding='gbk',errors='ignore')
-        return html.replace('�', ''),False
+        return html.replace('�', ''),True

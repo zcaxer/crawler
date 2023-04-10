@@ -406,8 +406,8 @@ class Parser:
         return last_page
 
     @staticmethod
-    async def page_parser(soup, page, topic: Nga.Topic):
-        logging.debug("开始解析第%d页", page)
+    async def page_parser(soup, page_number, topic: Nga.Topic):
+        logging.debug("开始解析第%d页", page_number)
         if topic.title is None:
             topic.title = Parser.get_title(soup)
         post_infos = soup.find_all("td", class_="c2")
@@ -458,5 +458,5 @@ class Parser:
                 + f"<p>{post.index}:{post.author_name},{post.author_id},{post.date},up:{post.up_count}:<br>{parsed_html}</p>\n"
             )
             topic.add_post(post, True)
-        logging.info("第%d页解析完成", page)
+        logging.info("第%d页解析完成", page_number)
         return result_html
