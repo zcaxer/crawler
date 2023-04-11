@@ -339,7 +339,7 @@ class Parser:
 
     @staticmethod
     async def comment_parser(post: Nga.Post, topic: Nga.Topic):
-        logging.info("开始处理引用和回复")
+        #logging.info("开始处理引用和回复")
         parsed_html = ""
         pattern_comment = re.compile(
             r"(\[quote\]|\[b\]).*\[[pt]id=(\d+).*?Post\s*by\s*\[uid=?(-?\d*)\](.*)\[/uid\].*\[/(?:b|quote)\](.*?)$"
