@@ -6,7 +6,6 @@ import logging
 import re
 import json
 from datetime import datetime
-from .request import Request
 from .nga import Nga
 from .mongo import Mongo
 
@@ -319,7 +318,7 @@ class Parser:
         return content
 
     @staticmethod
-    async def img_parser(topic_title, post_content: str):
+    async def img_parser(request,topic_title, post_content: str):
         # logging.info(f'Processing {self.title} img url')
         # logging.info(f'Processing {self.title} img url')
         pattern_img = re.compile(r"(.*?)\[img\]\.?(.+?)\[/img\](.*?)")
@@ -330,7 +329,6 @@ class Parser:
         post_content = ""
         for i in match_img:
             pic_name = pattern_pic_name.search(i[1]).group(1)
-            request = Request()
             await request.download_img(i[1], topic_title, pic_name)
             post_content += (
                 f'{i[0]}<img src="../htmls/{topic_title}/img/{pic_name}">{i[2]}'
@@ -396,7 +394,7 @@ class Parser:
         return last_page
 
     @staticmethod
-    async def page_parser(soup, page_number, topic: Nga.Topic):
+    async def page_parser(request, soup, page_number, topic: Nga.Topic):
         logging.debug("开始解析第%d页", page_number)
         if topic.title is None:
             topic.title = Parser.get_title(soup)
@@ -443,7 +441,7 @@ class Parser:
             post.date = datetime.strptime(date_string, "%Y-%m-%d %H:%M")
             post.content = post_info.find(
                 ["span", "p"], class_="postcontent").text
-            post.content = await Parser.img_parser(topic.title, post.content)
+            post.content = await Parser.img_parser(request,topic.title, post.content)
             post.content = await Parser.emoji_parser(post.content)
             parsed_html = await Parser.comment_parser(post, topic)
             result_html = (

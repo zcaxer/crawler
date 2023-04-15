@@ -2,13 +2,13 @@
 '''
 import os
 import logging
-import time
 import asyncio
+import traceback
+
 import aiohttp
 
 from .nga import Nga
 from .mongo import Mongo
-
 
 class Request:
 
@@ -27,13 +27,17 @@ class Request:
             return
         if url[1] == 'm':
             url = Nga.url_img+url
-        async with self.session.get(url) as resp:
-            with open(f'htmls/{path}/img/{pic_name}', 'wb') as f:
-                while True:
-                    chunk = await resp.content.read(1024)
-                    if not chunk:
-                        break
-                    f.write(chunk)
+        try:
+            async with self.session.get(url) as resp:
+                with open(f'htmls/{path}/img/{pic_name}', 'wb') as f:
+                    while True:
+                        chunk = await resp.content.read(1024)
+                        if not chunk:
+                            break
+                        f.write(chunk)
+        except Exception as e:
+            traceback.print_exc()
+            logging.error('%s download failed',pic_name)
 
     async def get_page(self, topic_id, page_number: int, topic_title=None, refresh_old_html=False, delay=2):
         html_path=f'htmls/{topic_title}/{topic_title}{page_number}.html'

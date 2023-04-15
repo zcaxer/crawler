@@ -15,12 +15,10 @@ from .parser import Parser as parser
 
 
 class Nga_clawler:
-    request = None
     mongo = None
 
     def __init__(self):
-        if Nga_clawler.request is None:
-            Nga_clawler.request = Request()
+        self.request = Request()
         if Nga_clawler.mongo is None:
             Nga_clawler.mongo = Mongo()
 
@@ -32,7 +30,10 @@ class Nga_clawler:
         self.mongo.async_client.close()
         self.mongo.sync_client.close()
 
-    async def update(self):
+    async def update_one(self,topic):
+        pass
+
+    async def update_live(self):
         topics = await self.mongo.get_topic_info()
         for topic_dict in topics:
             topic = Nga.Topic(
@@ -82,7 +83,7 @@ class Nga_clawler:
                                 ) as f:
                                     f.write(html)
                                 logging.info("写入%s%d.html", topic.title, p)
-                            topic.result_html += await parser.page_parser(
+                            topic.result_html += await parser.page_parser(self.request, 
                                 soup, p, topic
                             )
 
@@ -130,7 +131,7 @@ class Nga_clawler:
                 f.write(page1)
                 logging.info("写入%s1.html", topic.title)
         logging.info("开始解析%s第1页", topic.title)
-        topic.result_html += await parser.page_parser(soup, 1, topic)
+        topic.result_html += await parser.page_parser(self.request, soup, 1, topic)
         for page_number in range(2, topic.page_count + 1):
             logging.info("开始请求%s%d.html", topic.title, page_number)
             html, need_write = await self.request.get_page(
@@ -145,7 +146,7 @@ class Nga_clawler:
             if not html == "" and html is not None:
                 logging.info("开始解析%s第%d页", topic.title, page_number)
                 soup = bs(html, "lxml")
-                topic.result_html += await parser.page_parser(soup, page_number, topic)
+                topic.result_html += await parser.page_parser(self.request, soup, page_number, topic)
         topic.write_to_result_html()
         topic.status = Nga.TopicStatus.LIVE
         await self.mongo.store_topic(topic)

@@ -32,11 +32,11 @@ logging.basicConfig(level=logging.DEBUG)
 async def main():
     crawler=Nga_clawler()
     if args.update:
-        await crawler.update()
+        await crawler.update_live()
     print(args)
     for tid in args.id:
         await crawler.start(Nga.Topic(tid))
-
+    await crawler.request.session.close()
 
     #await read_htmls()
 
