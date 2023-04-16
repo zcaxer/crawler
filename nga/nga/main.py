@@ -55,64 +55,62 @@ class Nga_clawler:
                     )
                     logging.info("id:%d finished", topic.tid)
                     continue
-                elif page_title == "帖子正等待审核":
+                if page_title == "帖子正等待审核":
                     continue
                 topic.title = await parser.get_title(soup)
                 if not topic.title == topic_dict["title"]:
                     pass  # 帖子改名
-                else:
-                    s_posttime = soup.find_all("div", {"class": "postInfo"})
-                    last_posttime = s_posttime[-1].text
-                    last_post_date = datetime.strptime(last_posttime, "%Y-%m-%d %H:%M")
-                    if last_post_date != topic.last_post_date:
-                        logging.info("%s发现更新", topic.title)
-                        old_last_post_index = topic.last_post_index
-                        max_page = await parser.get_page_count(soup)
-                        # nga_clawler = Nga_clawler(id)
-                        for p in range(topic.page_count, max_page + 1):
-                            if not p == topic.page_count:
-                                html, alredy_exits = await self.request.get_page(
-                                    topic.tid, p, topic.title
-                                )
-                                soup = bs(html, "lxml")
-                            if not alredy_exits:
-                                with open(
-                                    f"htmls/{topic.title}/{topic.title}{p}.html",
-                                    "w",
-                                    encoding="gbk",
-                                ) as f:
-                                    f.write(html)
-                                logging.info("写入%s%d.html", topic.title, p)
-                            topic.result_html += await parser.page_parser(self.request, 
-                                soup, p, topic
-                            )
 
-                        with open(
-                            f"results/{topic.title}.html", "r", encoding="utf-8"
-                        ) as r:
-                            old_lines = r.readlines()[7:-2]
-                            new_lines = topic.result_html.splitlines()
-                            pattern = re.compile(
-                                r"\s*\<\s*p\s*\>\s*(\d+)\s*:.*\<\s*/p\s*\>\s*"
+                s_posttime = soup.find_all("div", {"class": "postInfo"})
+                last_posttime = s_posttime[-1].text
+                last_post_date = datetime.strptime(last_posttime, "%Y-%m-%d %H:%M")
+                if last_post_date != topic.last_post_date:
+                    logging.info("%s发现更新", topic.title)
+                    old_last_post_index = topic.last_post_index
+                    max_page = await parser.get_page_count(soup)
+                    # nga_clawler = Nga_clawler(id)
+                    for page_number in range(topic.page_count, max_page + 1):
+                        if not page_number == topic.page_count:
+                            html, alredy_exits = await self.request.get_page(
+                                topic.tid, page_number, topic.title
                             )
-                            while True:
-                                n = int(pattern.match(new_lines[0]).group(1))
-                                if n <= old_last_post_index:
-                                    new_lines.pop(0)
-                                else:
-                                    break
-                            topic.result_html = ""
-                            for line in old_lines:
-                                topic.result_html = topic.result_html + line
-                            for line in new_lines:
-                                topic.result_html = topic.result_html + line + "\n"
-                        topic.page_count = max_page
-                        topic.write_to_result_html()
-
-                        await self.mongo.store_topic(topic)
+                            soup = bs(html, "lxml")
+                        if not alredy_exits:
+                            self.store_html(topic.title, html, page_number)
+                        topic.result_html += await parser.page_parser(self.request, 
+                            soup, page_number, topic
+                        )
+                    with open(
+                        f"results/{topic.title}.html", "r", encoding="utf-8"
+                    ) as r:
+                        old_lines = r.readlines()[7:-2]
+                        new_lines = topic.result_html.splitlines()
+                        pattern = re.compile(
+                            r"\s*\<\s*p\s*\>\s*(\d+)\s*:.*\<\s*/p\s*\>\s*"
+                        )
+                        while True:
+                            n = int(pattern.match(new_lines[0]).group(1))
+                            if n <= old_last_post_index:
+                                new_lines.pop(0)
+                            else:
+                                break
+                        topic.result_html = ""
+                        for line in old_lines:
+                            topic.result_html = topic.result_html + line
+                        for line in new_lines:
+                            topic.result_html = topic.result_html + line + "\n"
+                    topic.page_count = max_page
+                    topic.write_to_result_html()
+                    await self.mongo.store_topic(topic)
             except Exception as e:
                 traceback.print_exc()
                 logging.info("%d请求失败", topic.tid)
+
+    @staticmethod
+    def store_html(title, html, page_number):
+        with open(f"htmls/{title}/{title}{page_number}.html", "w",encoding="gbk") as f:
+            f.write(html)
+        logging.info("写入%s%d.html", title, page_number)
 
     async def start(self, topic, refresh_old_html=False):
         page1, need_write = await self.request.get_page(
