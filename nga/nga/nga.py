@@ -44,6 +44,7 @@ class Nga:
             self.posts = []
             self.result_html = ''
             self.anony_posters=anony_posters
+            self.new_titles=[]
             self.status = Nga.TopicStatus.LIVE
             if Nga.mongo is None:
                 Nga.mongo = Mongo()
@@ -64,7 +65,8 @@ class Nga:
                 'last_post_index': self.last_post_index,
                 'page_count': self.page_count,
                 'status': self.status.value,
-                'anony_posters':self.anony_posters
+                'anony_posters':self.anony_posters,
+                'new_titles':self.new_titles,
             }
 
         def add_post(self, post,new=False):
@@ -89,8 +91,8 @@ class Nga:
             if post is None:
                 post_dict= await Nga.mongo.search_post(self.tid,post_pid)
                 if post_dict is None:
+                    logging.warning('post%d搜索失败',post_pid)
                     return None
-                    logging.warning('帖子%d搜索失败')
                 post = Nga.Post(post_dict)
                 self.add_post(post)
             return post

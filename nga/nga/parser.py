@@ -422,6 +422,7 @@ class Parser:
             except:
                 logging.error("正则错误：%s", post_script_str)
             post.pid = int(info_list[0])
+            if post.pid==0:post.pid=topic.tid
             post.author_id = int(info_list[1])
             post.up_count = int(info_list[2])
             if str(post.author_id) in user_info_json:

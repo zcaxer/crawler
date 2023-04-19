@@ -13,6 +13,7 @@ async def read_htmls():
     info2=data['ongoing_ids']
     crawler=Nga_clawler()
     info= info1 | info2
+
     for key in info:
         topic=Nga.Topic(key,title=info[key]['title'])
         await crawler.start(topic)
@@ -29,11 +30,13 @@ args = arg_parser.parse_args()
 
 logging.basicConfig(level=logging.DEBUG)
 
+#args.update=1
 async def main():
     crawler=Nga_clawler()
     if args.update:
         await crawler.update_live()
     print(args)
+#    args.id=[36004549]
     for tid in args.id:
         await crawler.start(Nga.Topic(tid))
     await crawler.request.session.close()

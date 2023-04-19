@@ -59,7 +59,12 @@ class Nga_clawler:
                     continue
                 topic.title = await parser.get_title(soup)
                 if not topic.title == topic_dict["title"]:
-                    pass  # 帖子改名
+                    if 'new_titles' in   topic_dict.keys():
+                        topic.new_titles=topic_dict['new_titles']
+                    else:
+                        topic.new_titles=[]
+                    topic.new_titles.append(topic.title)
+                    topic.title=topic_dict['title']  # 帖子改名
 
                 s_posttime = soup.find_all("div", {"class": "postInfo"})
                 last_posttime = s_posttime[-1].text
@@ -107,10 +112,13 @@ class Nga_clawler:
                 logging.info("%d请求失败", topic.tid)
 
     @staticmethod
-    def store_html(title, html, page_number):
-        with open(f"htmls/{title}/{title}{page_number}.html", "w",encoding="gbk") as f:
-            f.write(html)
-        logging.info("写入%s%d.html", title, page_number)
+    def store_html(title, html, page_number,result=False):
+        if result:
+            pass
+        else:    
+            with open(f"htmls/{title}/{title}{page_number}.html", "w",encoding="gbk") as f:
+                f.write(html)
+            logging.info("写入%s%d.html", title, page_number)
 
     async def start(self, topic, refresh_old_html=False):
         page1, need_write = await self.request.get_page(
@@ -123,11 +131,7 @@ class Nga_clawler:
             logging.info("创建文件夹%s", topic.title)
             os.mkdir(f"htmls/{topic.title}")
         if need_write:
-            with open(
-                f"htmls/{topic.title}/{topic.title}1.html", "w", encoding="gbk"
-            ) as f:
-                f.write(page1)
-                logging.info("写入%s1.html", topic.title)
+            self.store_html(topic.title, page1, 1)
         logging.info("开始解析%s第1页", topic.title)
         topic.result_html += await parser.page_parser(self.request, soup, 1, topic)
         for page_number in range(2, topic.page_count + 1):
@@ -136,11 +140,7 @@ class Nga_clawler:
                 topic.tid, page_number, topic.title, refresh_old_html
             )
             if need_write:
-                with open(
-                    f"htmls/{topic.title}/{topic.title}{page_number}.html", "w", encoding="gbk"
-                ) as f:
-                    f.write(html)
-                    logging.info("写入%s%d.html", topic.title, page_number)
+                self.store_html(topic.title,html,page_number)
             if not html == "" and html is not None:
                 logging.info("开始解析%s第%d页", topic.title, page_number)
                 soup = bs(html, "lxml")
@@ -155,7 +155,7 @@ class Nga_clawler:
         with open("index.html", "w") as f:
             f.write(content)
         soup = bs(content, "lxml")
-        list = soup.find_all("a", {"class": "topic"})
+        topic_list = soup.find_all("a", {"class": "topic"})
         replies_list = soup.find_all("a", {"class": "replies"})
-        print(list[-1]["href"], list[-1].text)
+        print(topic_list[-1]["href"], topic_list[-1].text)
         print(replies_list[-1].text)

@@ -79,6 +79,7 @@ class Mongo:
                 "title": 1,
                 "last_post_index": 1,
                 "anony_posters": 1,
+                "new_titles": 1,
             },
         )
         docs=await cursor.to_list(length=None)
