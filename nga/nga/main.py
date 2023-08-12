@@ -56,7 +56,7 @@ class Nga_clawler:
                     await self.mongo.async_client.nga.topics.update_one(
                         {"tid": topic.tid}, {"$set": {"status": 2}}
                     )
-                    logging.info("id:%d finished", topic.tid)
+                    logging.info("id:%d finished,%s", topic.tid,page_title)
                     continue
                 if page_title == "帖子正等待审核":
                     continue
