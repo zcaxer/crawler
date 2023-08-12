@@ -70,12 +70,15 @@ class Mongo:
             return False
     
 
-    async def get_topic_info(self):
+    async def get_topic_info(self,finished=False):
         """
         This function retrieves  "status", "tid", "page_count", "last_post_date","title","last_post_index"
         """
+        status_code=1
+        if finished:
+            status_code=2
         cursor = self.async_client.nga.topics.find(
-            {"status": 1},
+            {"status": status_code},
             {
                 "_id": 0,
                 "tid": 1,

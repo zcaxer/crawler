@@ -35,8 +35,8 @@ class Nga_clawler:
     async def update_one(self, topic):
         pass
 
-    async def update_live(self):
-        topics = await self.mongo.get_topic_info()
+    async def update_all(self,finished=False):
+        topics = await self.mongo.get_topic_info(finished)
         for topic_dict in topics:
             topic = Nga.Topic(
                 topic_dict["tid"],
@@ -45,6 +45,7 @@ class Nga_clawler:
                 topic_dict["last_post_index"],
             )
             topic.anony_posters = topic_dict["anony_posters"]
+
             try:
                 html, alredy_exits = await self.request.get_page(
                     topic.tid, topic.page_count
