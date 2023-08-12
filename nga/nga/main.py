@@ -113,7 +113,7 @@ class Nga_clawler:
                     await self.mongo.store_topic(topic)
             except Exception as e:
                 traceback.print_exc()
-                logging.info("%d请求失败", topic.tid)
+                logging.info("%d请求失败,%s", topic.tid,page_title)
 
     @staticmethod
     def store_html(title, html, page_number, result=False):
