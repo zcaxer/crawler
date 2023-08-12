@@ -62,8 +62,13 @@ class Mongo:
             return None
         return result
 
-    async def get_crawler_info(self):
-        return self.async_client.nga.topics.find_all().to_list(length=None)
+    async def check_mongodb(self):
+        try:
+            await self.async_client.server_info()
+            return True
+        except Exception:
+            return False
+    
 
     async def get_topic_info(self):
         """
@@ -85,6 +90,23 @@ class Mongo:
         docs=await cursor.to_list(length=None)
         return docs
 
+    #delete a topic from mongodb
+    async def delete_topic(self, tid):
+        await self.async_client.nga.topics.delete_one({"tid": tid})
+        await self.async_client.nga_topic[str(tid)].drop()
+
+    def search_topic_by_title_str(self, topic_title_str):
+        '''
+        Searches for a topic by its title string using the NGA async client.
+        Args:
+            topic_title_str (str): The string to search for in the topic titles.
+        Returns:
+            int: The ID of the first topic whose title matches the given string.
+        Raises:
+        IndexError: If no topic is found or the search result is empty.
+        '''
+        topic=self.sync_client.nga.topics.find({"title": {"$regex": topic_title_str}})[0]
+        return topic['tid'],topic['title']
 
 if __name__ == "__main__":
     mongo = Mongo()

@@ -3,6 +3,8 @@ import os
 import traceback
 import logging
 from datetime import datetime
+import shutil
+
 from bs4 import BeautifulSoup as bs
 
 from .request import Request
@@ -30,7 +32,7 @@ class Nga_clawler:
         self.mongo.async_client.close()
         self.mongo.sync_client.close()
 
-    async def update_one(self,topic):
+    async def update_one(self, topic):
         pass
 
     async def update_live(self):
@@ -49,7 +51,7 @@ class Nga_clawler:
                 )
                 soup = bs(html, "lxml")
                 page_title = soup.title.text
-                if page_title in ("找不到主题", "帖子发布或回复时间超过限制", "帖子被设为隐藏", "帖子审核未通过","帐号权限不足"):
+                if page_title in ("找不到主题", "帖子发布或回复时间超过限制", "帖子被设为隐藏", "帖子审核未通过", "帐号权限不足"):
                     await self.mongo.async_client.nga.topics.update_one(
                         {"tid": topic.tid}, {"$set": {"status": 2}}
                     )
@@ -59,16 +61,17 @@ class Nga_clawler:
                     continue
                 topic.title = await parser.get_title(soup)
                 if not topic.title == topic_dict["title"]:
-                    if 'new_titles' in   topic_dict.keys():
-                        topic.new_titles=topic_dict['new_titles']
+                    if 'new_titles' in topic_dict.keys():
+                        topic.new_titles = topic_dict['new_titles']
                     else:
-                        topic.new_titles=[]
+                        topic.new_titles = []
                     topic.new_titles.append(topic.title)
-                    topic.title=topic_dict['title']  # 帖子改名
+                    topic.title = topic_dict['title']  # 帖子改名
 
                 s_posttime = soup.find_all("div", {"class": "postInfo"})
                 last_posttime = s_posttime[-1].text
-                last_post_date = datetime.strptime(last_posttime, "%Y-%m-%d %H:%M")
+                last_post_date = datetime.strptime(
+                    last_posttime, "%Y-%m-%d %H:%M")
                 if last_post_date != topic.last_post_date:
                     logging.info("%s发现更新", topic.title)
                     old_last_post_index = topic.last_post_index
@@ -82,9 +85,9 @@ class Nga_clawler:
                             soup = bs(html, "lxml")
                         if not alredy_exits:
                             self.store_html(topic.title, html, page_number)
-                        topic.result_html += await parser.page_parser(self.request, 
-                            soup, page_number, topic
-                        )
+                        topic.result_html += await parser.page_parser(self.request,
+                                                                      soup, page_number, topic
+                                                                      )
                     with open(
                         f"results/{topic.title}.html", "r", encoding="utf-8"
                     ) as r:
@@ -112,11 +115,11 @@ class Nga_clawler:
                 logging.info("%d请求失败", topic.tid)
 
     @staticmethod
-    def store_html(title, html, page_number,result=False):
+    def store_html(title, html, page_number, result=False):
         if result:
             pass
-        else:    
-            with open(f"htmls/{title}/{title}{page_number}.html", "w",encoding="gbk") as f:
+        else:
+            with open(f"htmls/{title}/{title}{page_number}.html", "w", encoding="gbk") as f:
                 f.write(html)
             logging.info("写入%s%d.html", title, page_number)
 
@@ -140,7 +143,7 @@ class Nga_clawler:
                 topic.tid, page_number, topic.title, refresh_old_html
             )
             if need_write:
-                self.store_html(topic.title,html,page_number)
+                self.store_html(topic.title, html, page_number)
             if not html == "" and html is not None:
                 logging.info("开始解析%s第%d页", topic.title, page_number)
                 soup = bs(html, "lxml")
@@ -148,6 +151,12 @@ class Nga_clawler:
         topic.write_to_result_html()
         topic.status = Nga.TopicStatus.LIVE
         await self.mongo.store_topic(topic)
+
+    async def delete_topic(self, title_str):
+        tid, title = self.mongo.search_topic_by_title_str(title_str)
+        await self.mongo.delete_topic(tid)
+        os.remove(f'results/{title}.html')
+        shutil.rmtree(f'htmls/{title}')
 
     async def get_index(self):
         r = await self.request.session.get(Nga.url_index)

@@ -25,18 +25,26 @@ arg_parser.add_argument(
     '-u', '--update', action='store_true', help='更新爬虫库中的帖子')
 arg_parser.add_argument(
     '-f', '--force', action='store_true', help='强制更新该id的帖子')
+arg_parser.add_argument(
+    '-d','--delete', metavar='DELETE',type=str,nargs='*',help='删除title包含str的帖子'
+)
 arg_parser.add_argument('id', metavar='ID', nargs='*', type=int)
-args = arg_parser.parse_args()
 
+args = arg_parser.parse_args()
+#args.update=1
 logging.basicConfig(level=logging.DEBUG)
 
-#args.update=1
 async def main():
     crawler=Nga_clawler()
+    if args.delete:
+        for str in args.delete:
+            await crawler.delete_topic(str)
+
     if args.update:
         await crawler.update_live()
     print(args)
-#    args.id=[36004549]
+#1
+#     args.id=[36004549]
     for tid in args.id:
         await crawler.start(Nga.Topic(tid))
     await crawler.request.session.close()
