@@ -50,8 +50,11 @@ async def main():
 #     args.id=[36004549]
     for tid in args.id:
         await crawler.start(Nga.Topic(tid))
-    await crawler.request.session.close()
 
     #await read_htmls()
+
+    await crawler.get_index()
+  
+    await crawler.request.session.close()
 
 asyncio.run(main())

@@ -18,6 +18,7 @@ from .parser import Parser as parser
 
 class Nga_clawler:
     mongo = None
+    pattern=None
 
     def __init__(self):
         self.request = Request()
@@ -161,11 +162,25 @@ class Nga_clawler:
 
     async def get_index(self):
         r = await self.request.session.get(Nga.url_index)
-        content = r.text.replace("�", "")
+        content =await r.text()
+        content = content.replace("�", "")
         with open("index.html", "w") as f:
             f.write(content)
         soup = bs(content, "lxml")
-        topic_list = soup.find_all("a", {"class": "topic"})
-        replies_list = soup.find_all("a", {"class": "replies"})
-        print(topic_list[-1]["href"], topic_list[-1].text)
-        print(replies_list[-1].text)
+        topic_tags = soup.find_all("a", {"class": "topic"})
+        replies_tags = soup.find_all("a", {"class": "replies"})
+
+        if Nga_clawler.pattern==None:
+            Nga_clawler.pattern=re.compile(r"(\d+)")
+
+        topic_list=[]
+        for topic_tag in topic_tags:
+            topic_id=Nga_clawler.pattern.search(topic_tag["href"]).group(1)
+            topic_title=topic_tag.text
+            topic_replies=int(replies_tags[int(topic_id)-1].text)
+            topic=Nga.Topic(topic_id)
+            topic_list.append(topic)
+
+
+        print(topic_tags[-1]["href"], topic_tags[-1].text)
+        print(replies_tags[-1].text)

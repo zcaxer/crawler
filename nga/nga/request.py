@@ -9,6 +9,7 @@ import aiohttp
 
 from .nga import Nga
 from .mongo import Mongo
+from .emoji import emoji_name_list
 
 class Request:
 
@@ -18,6 +19,9 @@ class Request:
         self.session = aiohttp.ClientSession(cookies=self.cookies)
 
     async def download_img(self, url: str, topic_title: str, pic_name: str):
+        if pic_name in emoji_name_list:
+            logging.info('%s is emoji', pic_name)
+            return
         logging.info('Downloading %s ', pic_name)
         path=topic_title
         if not os.path.exists(f'htmls/{path}/img'):
